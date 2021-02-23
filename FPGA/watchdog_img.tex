@@ -1,0 +1,10 @@
+\begin{figure}[h]
+\begin{tikzpicture}[very thick, black, node distance=4cm]
+%Watchdog
+\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = compSoCCu , node distance = 3.5cm] (F1Watchdog) {Watchdog CU};
+\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1Watchdog, node distance = 1.5cm] (F1WtdTimer) {Watchdog Timer};
+\node[above of = F1Watchdog, xshift = -1.2cm, node distance = 1cm] (F1WdtName) {c Watchdog};
+\node[rectangle, draw, black, very thick, fit = (F1WdtName)(F1WtdTimer), inner sep = 2mm, outer sep = 2mm] (compWatchdog) {};
+\end{tikzpicture}
+\caption{Watchdog}
+\end{figure}
