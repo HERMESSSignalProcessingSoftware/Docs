@@ -1,0 +1,23 @@
+\subsection{Komponente: Stamp}
+\label{bes:Stamp}
+Die STAMP Systemkomponente beschreibt einen Logikblock, der für die Kommunikation mit dem ADS 1147 zuständig ist. Siehe Abbildung \ref{fig:Stamp}. 
+Zur Kommunikation mit dem ADS 1147 Analog - Digital - Wandlern (ADC) , wird ein SPI Bus genutzt. Der ADC wird durch die Komponente Stamp eingestellt, die entsprechenden Werte können durch den angebrachten AMBA Bus geladen werden. Die entsprechenden Werte werden von dem im SoC integrierten Microcontroller geladen werden. 
+Der die beiden ADCs, welche mit dem dem Dehnungsmessstreifen (SGR) verbunden sind werden mit einer Geschwindigkeit von 2 kSp/s gewandelt. Der ADC an dem PT100 wird mit 10 Sp/s betrieben. 
+% TODO: Mehr dazu schreiben, Jonathans komponente
+\subsection{Komponente: Memory}
+\label{bes:memory}
+\subsection{Komponente: Watchdog}
+Der Watchdog implementiert seinen eigenen Timer zur Überwachung und Steuerung der Stamp - Komponente. Der Watchdog Timer wird auf 2 ms eingestellt. In dieser Zeit sollten die Stamps vier Werte geliefert haben. Nachfolgendes Diagramm zeigt das zeitliche Verhalten des Systems. 
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[htb]
+  \begin{tabular}{|p{.3\linewidth}|p{.15\linewidth}|p{.45\linewidth}|}\hline
+  \textbf{Signal} & \textbf{Richtung} & \textbf{Beschreibung} \\ \hline
+  Async. Reset n & output & Watchdog leitet $\overline{reset}$ an die Komponenten weiter. Siehe Abbildung XXX. \\ \hline 
+  AMBA & input / output & Busanbindung an den Microcontroller zur Einstellung des Watchdogs und zur Übermittlung von Informationen über eine Komponente, z.B. nach Async. Reset. \\ \hline
+  Data Ready n & input & Setzt den Watchdog für die entsprechende Komponente zurück. Erfolgt vier mal hintereinander kein Data Ready Signal wird die Komponente zurück gesetzt. Ein Identifier wird an den Microcontroller gemeldet, dieser hat nun die Konfiguration erneut zu laden. \\ \hline
+  clk & input & Die Systemclock. \\ \hline 
+  $\overline{reset} $ & input & Async. Reset des Gesamtsystems, der Reset führt auch zu einem Reset des Watchdogs. In Folge dessen wird auch der Async. Reset n für die einzelnen Stamp  - Komponenten getriggert. \\ \hline
+  \end{tabular}
+   \caption{Watchdog Signal Beschreibungen}
+\end{table}
+\renewcommand{\arraystretch}{1.0}
