@@ -32,6 +32,8 @@
 \chapter{Blockdiagramm}
 \input{blockdiagramm.tex}
 \input{detailBlockdiagramm.tex}
+\input{StampMemoryBlockdiagramm.tex}
+\input{Watchdogdiagramm.tex}
 \chapter{Beschreibung}
 \section{Komponente: STAMP}
 Die STAMP Systemkomponente beschreibt einen Logikblock, der für die Kommunikation mit dem ADC 1147 zuständig ist. Um diese Kommunikation zu gewährleisten wird in jeder STAMP - Komponente ein SPI Core mit einer 8 - 16 Bit breiten  Busanbindung implementiert. Im vergleich zum bisherigen System würde die Anzahl der genutzten SPI - Systeme nicht erhöht werden. Die Systeme bedienen sich der FPGA inne liegenden Parallelität. 

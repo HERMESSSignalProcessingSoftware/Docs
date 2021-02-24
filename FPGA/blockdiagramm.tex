@@ -265,7 +265,7 @@
 
 \path[red!50, draw, line width = 2pt] (AB1) -- +(0cm, -.23cm);
 \path[red!50, draw, line width = 2pt] (AB2) -- +(0cm, -.35cm) ;
-\path[red!50, draw, line width = 2pt] (AB3) -- + (0cm, -1cm);
+%\path[red!50, draw, line width = 2pt] (AB3) -- + (0cm, -1cm);
 \path[red!50, draw, line width = 2pt] (ABS1) -- +(0cm, -0.3cm) -- +(2.3cm, -0.3cm) -- + (2.3cm, -1.7cm) --+(3.6cm, -1.7cm); 
 \path[red!50, draw, line width = 2pt] ($(ABS1) + (2.3cm, -1.7cm)$) -- +(0cm, -7.7cm); 
 \path[red!50, draw, line width = 2pt] (ABS2) -- +(0cm, -0.3cm) -- +(4.15cm, -0.3cm); 
@@ -308,7 +308,7 @@
 \coordinate (intCS5) at ($(compStamp5)-(1.55cm,0cm)$);
 \path[black, draw, line width = 3pt] (intCS5) -- +(-.5cm, 0cm);
 
-\coordinate (intCS4) at ($(compStamp4)-(1.55cm,0cm)$);
+\coordinate (intCS4) at ($(compStamp4)-(1.55cm,0cm)$); 
 \coordinate (intCS44) at ($(intCS4)-(.5cm,0cm)$);
 \path[black, draw, line width = 3pt] (intCS4) -- +(-.5cm, 0cm);
 \path[black, draw, line width = 3pt] (intCS44) -- +(0cm,.05cm) -- (intCS66) -- +(0cm, -0.05cm);
@@ -328,6 +328,10 @@
 \coordinate (memRight) at ($(compMemory) + (2.55cm, 0cm)$);
 \path[black, draw, line width = 9pt] (memLeft) --+(-0.55cm,0cm);
 \path[black, draw, line width = 9pt] (memRight) --+(0.4cm,0cm);
+\coordinate (compWtd1) at ($(compWatchdog) -(2.55cm, 0cm)$);
+\coordinate (compWtd2) at ($(compWatchdog) +(2.55cm, 0cm)$);
+\path[black, draw, line width = 3pt] (compWtd1) -- +(-0.5cm,0cm);
+\path[black, draw, line width = 3pt] (compWtd2) -- +(0.45cm,0cm);
 %Legende
 \node[below of = S6SGR2adc, node distance = 1.4cm] (legende) {Legende}; 
 \coordinate (l1) at ($(legende) -  (0cm, .5cm)$);
