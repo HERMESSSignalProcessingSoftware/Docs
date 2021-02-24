@@ -20,15 +20,16 @@
 %Write enable
 %\coordinate (WEcomp) at ($(F1S1cu) + (1.5cm, -1cm)$);
 %\path[blue, draw, line width = 2pt] (WEcomp) --  +(2.3cm, 0cm) --  node[above, rotate = 90]{\small{Write Enable}} +(2.3cm, -5cm);
-%Enable
+%clk
 \coordinate (clkcomp) at ($(compStamp1) + (3.45cm, -1cm)$);
 \path[blue!50, draw, line width = 2pt] (clkcomp) -- +(1.7cm, 0cm)  -- node[above, rotate = 90]{\small{clk}} +(1.7cm, -4cm);
 \path[blue!50, draw, line width = 2pt] ($(clkcomp) + (1.7cm, 0cm)$) -- +(0cm, 1cm) -- +(1.1cm, 1cm);
 %;
-%clk
-\coordinate (rstcomp) at ($(compStamp1) + (3.45cm, -2cm)$);
-\path[blue!70, draw, line width = 2pt] (rstcomp) --  +(1.1cm, 0cm)  -- node[above, rotate = 90]{\small{$\overline{reset}$}} +(1.1cm, -3cm);
-\path[blue!70, draw, line width = 2pt] ($(rstcomp) + (1.1cm, 0cm)$) -- + (0cm, 0.5cm) -- + (1.7cm, 0.5cm);
+%reset
+\coordinate (rstcomp) at ($(compWatchdog) - (3.45cm, 2cm)$);
+%\path[blue!70, draw, line width = 2pt] (rstcomp) --  +(1.1cm, 0cm)  -- node[above, rotate = 90]{\small{$\overline{reset}$}} +(1.1cm, -3cm);
+%\path[blue!70, draw, line width = 2pt] ($(rstcomp) + (1.1cm, 0cm)$) --  node[above, rotate = 90]{\small{$\overline{reset}$}} + (0cm, 0.5cm) -- + (1.7cm, 0.5cm);
+\path[blue!70, draw, line width = 2pt] (rstcomp) --+ (-0.5cm, 0cm) -- node[above, rotate = 90]{\small{$\overline{reset}$}} +(-.5cm, -3cm);
 %reset
 \coordinate (Ecomp) at ($(compStamp1) + (3.45cm, -3cm)$);
 \path[blue, draw, line width = 2pt] (Ecomp) -- +(0.5cm, 0cm)  -- node[above, rotate = 90]{\small{Enable}} +(0.5cm, -2cm);
