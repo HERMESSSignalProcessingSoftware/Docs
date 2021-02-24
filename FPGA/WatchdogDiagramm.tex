@@ -10,25 +10,29 @@
 %Watchdog
 \node[rectangle, draw, black, very thick, minimum height = 1.5cm, minimum width = 6.5cm, right of = F1S1cu , node distance = 8cm] (F1Watchdog) {Watchdog CU};
 \node[rectangle, draw, black, very thick, minimum height = 1.5cm, minimum width = 6.5cm, below of = F1Watchdog, node distance = 2cm] (F1WtdTimer) {Watchdog Timer};
-\node[above of = F1Watchdog, xshift = -2.2cm, node distance = 1cm] (F1WdtName) {c Watchdog};
-\node[rectangle, draw, black, very thick, fit = (F1WdtName)(F1WtdTimer), inner sep = 2mm, outer sep = 2mm] (compWatchdog) {};
+\node[above of = F1Watchdog, xshift = -2.0cm, node distance = 1cm] (F1WdtName) {c Watchdog};
+\node[rectangle, draw, black, very thick, fit = (F1WdtName)(F1WtdTimer), inner sep = 2mm, outer sep = 0mm] (compWatchdog) {};
 
 \coordinate (drdycomp) at ($(compStamp1) + (3.45cm, 2cm)$);
-\path[blue, draw, line width = 2pt] (drdycomp) -- node[above]{\small{Data Ready}} +(4.55cm, 0cm);
-
+\path[blue, draw, line width = 2pt] (drdycomp) -- node[above]{\small{Data Ready}} +(2.8cm, 0cm);
+\coordinate (areset) at ($(compStamp1) + (3.45cm, 1cm)$);
+\path[blue, draw, line width = 2pt] (areset) -- node[above]{\small{Async. Reset}} +(2.8cm, 0cm);
 %Write enable
 %\coordinate (WEcomp) at ($(F1S1cu) + (1.5cm, -1cm)$);
 %\path[blue, draw, line width = 2pt] (WEcomp) --  +(2.3cm, 0cm) --  node[above, rotate = 90]{\small{Write Enable}} +(2.3cm, -5cm);
 %Enable
-\coordinate (Ecomp) at ($(compStamp1) + (3.45cm, -1cm)$);
-\path[blue, draw, line width = 2pt] (Ecomp) -- +(1.5cm, 0cm)  -- node[above, rotate = 90]{\small{Enable}} +(1.5cm, -4cm);
+\coordinate (clkcomp) at ($(compStamp1) + (3.45cm, -1cm)$);
+\path[blue!50, draw, line width = 2pt] (clkcomp) -- +(1.7cm, 0cm)  -- node[above, rotate = 90]{\small{clk}} +(1.7cm, -4cm);
+\path[blue!50, draw, line width = 2pt] ($(clkcomp) + (1.7cm, 0cm)$) -- +(0cm, 1cm) -- +(1.1cm, 1cm);
+%;
 %clk
-\coordinate (clkcomp) at ($(compStamp1) + (3.45cm, -2cm)$);
-\path[blue, draw, line width = 2pt] (clkcomp) --  +(1.0cm, 0cm)  -- node[above, rotate = 90]{\small{clk}} +(1cm, -3cm);
+\coordinate (rstcomp) at ($(compStamp1) + (3.45cm, -2cm)$);
+\path[blue!70, draw, line width = 2pt] (rstcomp) --  +(1.1cm, 0cm)  -- node[above, rotate = 90]{\small{$\overline{reset}$}} +(1.1cm, -3cm);
+\path[blue!70, draw, line width = 2pt] ($(rstcomp) + (1.1cm, 0cm)$) -- + (0cm, 0.5cm) -- + (1.7cm, 0.5cm);
 %reset
-\coordinate (rstcomp) at ($(compStamp1) + (3.45cm, -3cm)$);
-\path[blue, draw, line width = 2pt] (rstcomp) -- +(0.5cm, 0cm)  -- node[above, rotate = 90]{\small{$\overline{reset}$}} +(0.5cm, -2cm);
-
+\coordinate (Ecomp) at ($(compStamp1) + (3.45cm, -3cm)$);
+\path[blue, draw, line width = 2pt] (Ecomp) -- +(0.5cm, 0cm)  -- node[above, rotate = 90]{\small{Enable}} +(0.5cm, -2cm);
+%
 \end{tikzpicture}
 \label{fig:stampwtd}
 \caption{Interface c Stamp zu c Watchdog}
