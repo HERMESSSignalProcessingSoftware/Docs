@@ -21,3 +21,75 @@ Der Watchdog implementiert seinen eigenen Timer zur Überwachung und Steuerung d
    \caption{Watchdog Signal Beschreibungen}
 \end{table}
 \renewcommand{\arraystretch}{1.0}
+
+\begin{figure}[ht] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+\node[state] (Init) {Init};
+\node[state, above right of = Init] (S1) {S1}; %node[below of = S1, node distance = .5cm] {Name} ;
+%\path ($(S1) + (-0.7, 0.5)$) --  ($(S1) + (0.7, 0.5)$);
+\node[state, below right of = S1] (S2) {S2};
+\node[state, below left  of = S2] (S3) {S3};
+\coordinate (leftInit) at ($(Init) + (-2.5cm, 1cm) $);
+\path[->]  (leftInit) edge node[sloped, anchor=center, above] {\small{$\overline{reset}$}} (Init);
+\path[->] (Init) edge[bend left] node[sloped, anchor=center, above] {Timer$_{Init}$ Hit} (S1);
+\path[->] (S1) edge[bend left] node[sloped, anchor=center, above] {pending = 1} (S2);
+\path[->] (S2) edge[bend left] node[sloped, anchor=center, below] {Wdt hit} (S3);
+\path[->] (S3) edge[bend left] node[sloped, anchor=center, above] {DRDY = 1} (S2);
+\path[->] (S3) edge[bend left] node[sloped, anchor=center, below] {Counter = 4} (Init);
+%
+\path[->] (S1) edge[loop above] node[sloped, anchor=center, above] {pending = 0} (S1); 
+\path[->] (S2) edge[loop right] node[sloped, anchor=center, above] {DRDY = 1} (S2); 
+\path[->] (S3) edge[loop below] node[sloped, anchor=center, below] {Wdt hit} (S3); 
+\path[->] (Init) edge[loop left] node[anchor=center, below left ] {Timer$_{Init} pending$} (Init); 
+\end{tikzpicture}
+\caption{Statemachine für ein Data Ready (DRDY) Signal}
+\label{fig:wdtStatemachine}
+\end{center}
+\end{figure}
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[htb]
+  \begin{tabular}{|p{.5\linewidth}|p{.5\linewidth}|}\hline
+ 	 \textbf{State}  &\textbf{Aufgabe}  \\ \hline
+ 	Init	& $async.~ Reset = 1$ \par Timer$_{Init}$ start\\ \hline
+	S1 &  $async.~ Reset = 0$ \par Timer$_{Init}$ stop \par AMBA Kommunikation zum $\mu$C: Initialisierung des entsprechenden Stamps. \\ \hline
+	S2 & Watchdog Timer start \\ \hline
+	S3 & Zähler hoch zählen\\ \hline
+  \end{tabular}
+   \caption{Watchdog Aufgaben der Zustände}
+\end{table}
+\begin{table}[htb]
+  	\begin{tabular}{| p{.21\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth} | 
+				 p{.04\linewidth}|}\hline 
+	% end of Description
+		\textbf{Ausgangszustand} & 
+		\multicolumn{2}{c|}{\textbf{$\overline{reset}$}} &  
+		\multicolumn{2}{c|}{\textbf{Timer$_{Init}$ Hit}} &  
+		\multicolumn{2}{c|}{\textbf{Wdt Hit}} &
+		\multicolumn{2}{c|}{\textbf{ $DRDY_n$}} & 
+		\multicolumn{2}{c|}{\textbf{AMBA Pending}}\\ \hline 
+		% New line
+		& 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1\\ \hline
+		% 
+		Nicht definiert & Init & & & & & & & & &  \\ \hline
+		Init &  & & Init & S1 & & & & & & \\ \hline
+		S1 &  & & &  & & & &  & S1 & S2 \\ \hline
+		S2 &  & & &  & & & S3 & S2 &  &  \\ \hline
+		S3 &  & & &  & & S3 | Init &  & S2 &  &  \\ \hline
+	\end{tabular}
+   \caption{Watchdog Übergangstabelle}
+\end{table}
+\renewcommand{\arraystretch}{1.0} 
+\noindent
+Der Watchdog wird durch eine Statemachine für jede Stampkomponente definiert. Mit dem Signal $\overline{reset}$ wird der Initialzustand \textit{Init} erreicht. Im Zustand \textit{Init} wird der Timer$_{Init}$ gestartet. Dieser läuft 100 ns, danach wird das Signal $Timer_{Init}Hit = 1$ gesetzt und die Statemachine wechselt in den Zustand \textit{S1}. Der Zustand \textit{S1} beendet den Timer$_{Init}$ und erwirkt eine Initialisierung der entsprechende Stampkomponente. Mit dem Signal \textit{Config compl.}  (AMBA Pending = 1) wechselt der Zustand zu \textit{S2}. Im Zustand \textit{S2} wird der Watchdogtimer (Wdt) aktiviert. Erfolgt vor Ablauf des Timers das Signal \textit{DRDYn = 1} verbleibt die Statemachine Zustand \textit{S2} und der Watchdogtimer wird neugestartet. Erfolgt das Signal \textit{DRDY = 1} nicht, wechselt der Zustand auf \textit{S3}. 
+Im Zustand \textit{S3} wird ein Zähler um eins inkrementiert. Mit dem Signal  \textit{DRDY = 1} wechselt der Zustand zurück auf \textit{S2} und der Zähler wird Null gesetzt. Läuft der Watchdogtimer erneut ab, so verbleibt der Zustand \textit{S3} und der Zähler wird weiter hochgezählt. Erreicht der Zähler den Wert 4 wird der Zustand auf \textit{Init} geändert. 
+

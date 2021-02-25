@@ -2,8 +2,8 @@
 	sensor/.style={rectangle, draw, minimum size=1cm},
 	component/.style={rectangle, draw, minimum size=4cm},
 	vhdlc/.style={rectangle, draw, minimum size = 1cm},
-	state/.style={circle, draw, minimum size=1cm},
-	bigSensor/.style={rectangle, draw, minimum height = 3cm,  minimum width = 3cm}
+	bigSensor/.style={rectangle, draw, minimum height = 3cm,  minimum width = 3cm},
+	state/.style={circle, draw, minimum size = 2cm}
 }
 
 \pgfdeclarelayer{background}
@@ -101,9 +101,10 @@
 \node[rectangle, draw, black, very thick, fit = (F1SoCcuName)(F1SoCControll), inner sep = 2mm, outer sep = 2mm] (compSoCCu) {};
 
 %Watchdog
-\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = compSoCCu , node distance = 3.5cm] (F1Watchdog) {Watchdog CU};
-\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1Watchdog, node distance = 1.5cm] (F1WtdTimer) {Watchdog Timer};
+\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = compSoCCu , node distance = 3.5cm] (F1Watchdog) {Watchdog Statemachine };
+\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1Watchdog, node distance = 1.5cm] (F1WtdTimer) {AMBA Connector};
 \node[above of = F1Watchdog, xshift = -1.2cm, node distance = 1cm] (F1WdtName) {c Watchdog};
+
 \node[rectangle, draw, black, very thick, fit = (F1WdtName)(F1WtdTimer), inner sep = 2mm, outer sep = 2mm] (compWatchdog) {};
 
 %STAMP rechts
@@ -265,7 +266,7 @@
 
 \path[red!50, draw, line width = 2pt] (AB1) -- +(0cm, -.23cm);
 \path[red!50, draw, line width = 2pt] (AB2) -- +(0cm, -.35cm) ;
-%\path[red!50, draw, line width = 2pt] (AB3) -- + (0cm, -1cm);
+\path[red!50, draw, line width = 2pt] (AB3) -- + (0cm, -1cm);
 \path[red!50, draw, line width = 2pt] (ABS1) -- +(0cm, -0.3cm) -- +(2.3cm, -0.3cm) -- + (2.3cm, -1.7cm) --+(3.6cm, -1.7cm); 
 \path[red!50, draw, line width = 2pt] ($(ABS1) + (2.3cm, -1.7cm)$) -- +(0cm, -7.7cm); 
 \path[red!50, draw, line width = 2pt] (ABS2) -- +(0cm, -0.3cm) -- +(4.15cm, -0.3cm); 
