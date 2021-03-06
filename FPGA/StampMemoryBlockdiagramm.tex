@@ -38,7 +38,7 @@
 \coordinate (S1amba) at ($(F1S1amba) -(0cm, .5cm)$);
 \path[red!70, draw, line width = 3pt] (S1amba) --  node[above, rotate = 90]{AMBA} + (0cm, -2.3cm); 
 \node[right  of = F1S1name, node distance = 11cm] (F1MemName) {c Memory};
-\node[bigSensor, right of =  F1S1cu, node distance = 8.0cm] (F1MemSpi) {2x SPI};
+\node[bigSensor, right of =  F1S1cu, node distance = 8.0cm] (F1MemSpi) {SPI};
 \node[rectangle, draw, black, minimum height = 3cm, minimum width = 5cm, right of = F1MemSpi, node distance = 4cm] (F1MemCu){Controll Unit};
 \node[rectangle, draw, black, minimum height = 1.5cm, minimum width = 8cm, below of = F1MemSpi, node distance = 2.5cm, xshift=.5cm] (F1MemTG) at ($(F1MemSpi)!0.5!(F1MemCu)$) {Timestamp Generator};
 \node[rectangle, draw, black, minimum height = 1.5cm, minimum width = 8cm, below of = F1MemTG, node distance = 2cm] (F1MemAmber) {AMBA Connector};
@@ -47,17 +47,17 @@
 \path[red!70, draw, line width = 3pt] (amberbus) -- node[above, rotate = 90]{AMBA} +(0cm, -2cm);
 %Signale zum Speicher
 \coordinate (pocM1) at ($(F1MemSpi) + (-1cm, 2.5cm)$);
-\path[black, draw, line width = 3pt] (pocM1) -- node[above, rotate = 90]{SPI \#1} + (0cm,1.75cm) ;
-\coordinate (pocM11) at ($(F1MemSpi) + (0cm, 2.5cm)$);
-\path[black, draw, line width = 3pt] (pocM11) -- node[above, rotate = 90]{SPI \#2} + (0cm,1.75cm) ;
+\path[black, draw, line width = 3pt] (pocM1) -- node[above, rotate = 90]{SPI} + (0cm,1.75cm) ;
+%\coordinate (pocM11) at ($(F1MemSpi) + (0cm, 2.5cm)$);
+%\path[black, draw, line width = 3pt] (pocM11) -- node[above, rotate = 90]{SPI \#2} + (0cm,1.75cm) ;
 \coordinate (pocM2) at ($(compMemory) + (0cm, 4.0cm)$);
 \path[black, draw] (pocM2) -- node[above, rotate = 90]{$\overline{CS11}$} + (0cm,1.75cm) ;
 \coordinate (pocM3) at ($(compMemory) + (1cm, 4.0cm)$);
 \path[black, draw] (pocM3) -- node[above, rotate = 90]{$\overline{CS12}$} + (0cm,1.75cm) ;
 \coordinate (pocM4) at ($(compMemory) + (2cm, 4.0cm)$);
-\path[black, draw] (pocM4) -- node[above, rotate = 90]{$\overline{CS21}$} + (0cm,1.75cm) ;
+%\path[black, draw] (pocM4) -- node[above, rotate = 90]{$\overline{CS21}$} + (0cm,1.75cm) ;
 \coordinate (pocM41) at ($(compMemory) + (3cm, 4.0cm)$);
-\path[black, draw] (pocM41) -- node[above, rotate = 90]{$\overline{CS22}$} + (0cm,1.75cm) ;
+%\path[black, draw] (pocM41) -- node[above, rotate = 90]{$\overline{CS22}$} + (0cm,1.75cm) ;
 %Allgemeine signale
 \coordinate (poc1) at ($(compMemory) - (2cm, 4.0cm)$);
 \path[black, draw] (poc1) -- node[above, rotate = 90]{clk} + (0cm,-1.75cm) ;
