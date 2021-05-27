@@ -61,25 +61,34 @@
 \path[->] (END3) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Waiting);
 
 \end{tikzpicture}
-\end{center}
+\end{center}		  
 \end{figure}
+
 \renewcommand{\arraystretch}{1.5} 
-\begin{longtable} [htb] { | p{3cm} | *{11}{p{1cm} |} } \hline
-		\multirow{2}{*}{\textbf{Ausgangszustand}} & 
-		\multicolumn{2}{c|}{\textbf{$\overline{reset}$}} &  
-		\multicolumn{2}{c|}{\textbf{MemoryCnt}} &  
-		\multicolumn{2}{c|}{\textbf{TempCounter}} &
-		\multicolumn{2}{c|}{\textbf{ $\text{drdy}_{1-6} $ or  WdtGo}} & 
-		\multicolumn{2}{c|}{\textbf{CSR(2)}} &
-		\textbf{Default} \\ \cline{2-12}
+\begin{longtable} [htb] { | p{3.5cm} | *{11}{p{1.5cm} |} } \hline
+		\multirow{2}{*}{\textbf{Ausgangszustand}}  & 
+		\multicolumn{2}{p{3cm} |}{  \textbf{$\text{Reset}_n$}} & 
+		\multicolumn{2}{p{3cm} |}{  \textbf{$\text{drdy}_{1-6}$}} & 
+		\multicolumn{2}{p{3cm} |}{  \textbf{MemoryCnt}} &
+		\multicolumn{2}{p{3cm} |}{  \textbf{TempCount}} &
+		\multicolumn{2}{p{3cm} |}{  \textbf{CSR(2)}} &
+		\textbf{Default}\\ \cline{2-12}
 \endhead
-1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \hline
-& 0 & 1 &\multicolumn{2}{c|}{ -- }& \multicolumn{2}{c|}{ -- } & 0 & 1 & 0 & 1 & -- \\ \hline
-Nicht definiert & Waiting & 1 &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  &  &  & &\\ \hline
-Waiting &  &  &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  & Preparing &  & &\\ \hline
-Preparing &  &  &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  &  &  & & Init\\ \hline
-Init &  &  &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  &  &  & & Init1\\ \hline
-\caption{Watchdog Übergangstabelle}
+ 			& 0 	& 1 & 0 & 1 & \multicolumn{2}{c|}{--} & \multicolumn{2}{c|}{--} & 0 & 1 & -- \\ \hline
+Nicht definiert 	& 	& \small{Waiting} &  & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & &  &  \\ \hline
+Waiting 		& 	& & & \small{Preparing} & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & &  \\ \hline
+Preparing		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Init} \\ \hline
+Init			& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Init1} \\ \hline
+CopyShadow	& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp1} \\ \hline
+Stamp1		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp2} \\ \hline
+Stamp2		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp3} \\ \hline
+Stamp3		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp4} \\ \hline
+Stamp5		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp6} \\ \hline
+Stamp6		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{End1} \\ \hline
+End1			& 	& & & \tiny{CopyShadow} & \multicolumn{2}{c|}{END2 bei 128} & \multicolumn{2}{c|}{} & & & \\ \hline
+End2			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{END3 bei 129} & & & \small{End2}\\ \hline
+End3			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Waiting}\\ \hline
+\caption{Memory Controllunit Statemachine Übergangstabelle}
 \end{longtable}
 
 \renewcommand{\arraystretch}{1.0} 
