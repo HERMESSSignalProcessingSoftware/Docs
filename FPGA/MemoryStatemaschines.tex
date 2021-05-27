@@ -5,7 +5,7 @@
 %    signal ControllUnitSubState     : typeStampSubstate;
 \subsection{Memory Statemachines}
 \begin{landscape}
-\begin{figure}[ht] 
+\begin{figure}[htb] 
 \begin{center}
 \begin{tikzpicture}[node distance = 4cm, black, ultra thick]
 
@@ -61,6 +61,7 @@
 \path[->] (END3) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Waiting);
 
 \end{tikzpicture}
+\caption{Controllunit statemachine} 
 \end{center}		  
 \end{figure}
 
@@ -90,6 +91,7 @@ End2			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{END3 bei 129} & &
 End3			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Waiting}\\ \hline
 \caption{Memory Controllunit Statemachine Übergangstabelle}
 \end{longtable}
-
 \renewcommand{\arraystretch}{1.0} 
+\subsection{Memory Controllunit FSM Substates}
+ASDG
 \end{landscape}
