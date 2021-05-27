@@ -1,0 +1,86 @@
+% Memory Statemachines 
+%type typeCUState is (Waiting, Preparing, CopyShadow, Init, Init1, STAMP1, STAMP2, STAMP3, STAMP4, STAMP5, STAMP6, END1, END2, END3, Locked);
+%    signal ControllUnitState        : typeCUState;
+%    type typeStampSubstate is (Prepare, Working, Working1);
+%    signal ControllUnitSubState     : typeStampSubstate;
+\subsection{Memory Statemachines}
+\begin{landscape}
+\begin{figure}[ht] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+
+\node[state] (Waiting) at (0, 1) {Waiting};
+\node[state, above right of = Waiting] (Preparing) {Preparing};
+\node[state, above right of = Preparing] (Init) {Init};
+\node[state, right of = Init] (Init1) {Init1};
+\node[state, right of = Init1] (CopyShadow) {CopyShadow};
+\node[state, below right of = CopyShadow] (STAMP1) {STAMP1};
+\node[state, below right of = STAMP1] (STAMP2) {STAMP2};
+\node[state, below of = STAMP2] (STAMP3) {STAMP3};
+\node[state, below left of = STAMP3] (STAMP4) {STAMP4};
+\node[state, below left of = STAMP4] (STAMP5) {STAMP5};
+\node[state, left of = STAMP5] (STAMP6) {STAMP6};
+\node[state, left of = STAMP6] (END1) {END1};
+\node[state, above left of = END1] (END2) {END2};
+\node[state, above left of = END2] (END3) {END3};
+\node[state, node distance = 5cm] (Locked) at ($(END3) !.5! (Waiting) + (3cm, 0cm)$) {Locked};
+
+\coordinate (Start) at ($(Waiting) + (-2cm,0cm)$);
+\coordinate (EnterLocked) at ($(Locked) + (3.5cm, 2cm)$);
+
+%Start of FSM
+\path[black, draw, ->]  (Start) -- node[sloped, anchor=center, above] {$\overline{reset}$}  (Waiting);
+
+%Enter Locked
+\path[black, draw, ->]  (EnterLocked) -- node[sloped, anchor=center, above] {CSR(2) = High}  (Locked);
+%Stay at locked
+\path[->] (Locked) edge[loop above] node[sloped, anchor=center, above] {CSR(2) = High} (Locked); 
+%Leave locked
+\path[->] (Locked) edge[bend left] node[sloped, anchor=center, below] {CSR(2) = Low} (Waiting);
+
+%Normal FSM action
+\path[->] (Waiting) edge[bend left] node[sloped, anchor=center, above, align=left] {$\text{drdy}_{1-6}$ = High \\WdtGo = High} (Preparing);
+\path[->] (Preparing) edge[bend left] node[sloped, anchor=center, above, align=left] {} (Init);
+\path[->] (Init) edge[bend left] node[sloped, anchor=center, above, align=left] {} (Init1);
+\path[->] (Init1) edge[bend left] node[sloped, anchor=center, above, align=left] {} (CopyShadow);
+\path[->] (CopyShadow) edge[bend left] node[sloped, anchor=center, above, align=left] {} (STAMP1);
+\path[->] (STAMP1) edge[bend left] node[sloped, anchor=center, above, align=left] {} (STAMP2);
+\path[->] (STAMP2) edge[bend left] node[sloped, anchor=center, above, align=left] {} (STAMP3);
+\path[->] (STAMP3) edge[bend left] node[sloped, anchor=center, above, align=left] {} (STAMP4);
+\path[->] (STAMP4) edge[bend left] node[sloped, anchor=center, above, align=left] {} (STAMP5);
+\path[->] (STAMP5) edge[bend left] node[sloped, anchor=center, above, align=left] {} (STAMP6);
+\path[->] (STAMP6) edge[bend left] node[sloped, anchor=center, above, align=left] {} (END1);
+\path[->] (END1) edge[bend left] node[sloped, anchor=center, below, align=left] {MemoryCnt = 128} (END2);
+\path[->] (END2) edge[bend left] node[sloped, anchor=center, below, align=left] {TempCounter = 129} (END3);
+
+%Path of END1 to CopyShadow
+\path[->] (END1) edge[bend right] node[sloped, anchor=center, above, align=left] {MemoryCnt $\neq$ 128 AND \\$(\text{drdy}_{1-6}$ = High  OR \\ WdtGo = High)} (CopyShadow);
+%Stay at END2 
+\path[->] (END2) edge[loop above] node[sloped, anchor=center, above] {TempCounter $\neq$ 129} (END2); 
+% Normal movement form END3 to Waiting
+\path[->] (END3) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Waiting);
+
+\end{tikzpicture}
+\end{center}
+\end{figure}
+\renewcommand{\arraystretch}{1.5} 
+\begin{longtable} [htb] { | p{3cm} | *{11}{p{1cm} |} } \hline
+		\multirow{2}{*}{\textbf{Ausgangszustand}} & 
+		\multicolumn{2}{c|}{\textbf{$\overline{reset}$}} &  
+		\multicolumn{2}{c|}{\textbf{MemoryCnt}} &  
+		\multicolumn{2}{c|}{\textbf{TempCounter}} &
+		\multicolumn{2}{c|}{\textbf{ $\text{drdy}_{1-6} $ or  WdtGo}} & 
+		\multicolumn{2}{c|}{\textbf{CSR(2)}} &
+		\textbf{Default} \\ \cline{2-12}
+\endhead
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \hline
+& 0 & 1 &\multicolumn{2}{c|}{ -- }& \multicolumn{2}{c|}{ -- } & 0 & 1 & 0 & 1 & -- \\ \hline
+Nicht definiert & Waiting & 1 &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  &  &  & &\\ \hline
+Waiting &  &  &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  & Preparing &  & &\\ \hline
+Preparing &  &  &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  &  &  & & Init\\ \hline
+Init &  &  &\multicolumn{2}{c|}{  }& \multicolumn{2}{c|}{ } &  &  &  & & Init1\\ \hline
+\caption{Watchdog Übergangstabelle}
+\end{longtable}
+
+\renewcommand{\arraystretch}{1.0} 
+\end{landscape}
