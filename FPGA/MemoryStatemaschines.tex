@@ -94,7 +94,7 @@ End3			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \s
 \end{longtable}
 \renewcommand{\arraystretch}{1.0} 
 \end{landscape}
-\subsection{Memory Controllunit FSM Substates}
+\subsection{Memory Controllunit FSM description}
 \subsubsection{Locked} 
 If controllunit status register (\textit{CSR}) bit 2 is set, the controllunit will enter a \textit{Locked} state. It leaves this state of in activity with CSR bit 2 transmission to a low state. The next state is \textit{Waiting}. \\\\
 Note: Setting CSR(2) to high will cancel all operations of the controllunit except of the AMBA operations which are not part of this statemachine. 
@@ -253,11 +253,26 @@ Variable \textit{TempCounter} is set to zero. \\
 SPI busy marker at register \textit{CSR} bit 29 is set to zero.\\ 
 The next SPI address is calculated. If \textit{SPIaddr} is zero, the next one is one. Otherwise, \textit{SPIAddr} is one the next one is zero. This will be saved at register \textit{CSR} bit 1 and 31 as \textit{current SPI address indicator}. 
 
+\subsection{APB3 FSM}
 
 
+\begin{figure}[htb] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4.5cm, black, ultra thick]
 
+\node[state] (AW) at (0,0) {APB3 Waiting};
+\node[state, below right  of = AW] (AWrite)  {APB3 Writing};
+\node[state, below left of = AW] (ARead) {APB3 Reading};
+\path[->] (AW) edge[bend right] node[sloped, anchor=center, above, align=left] {PSEL = High \\ PWrite = Low } (ARead);
+\path[->] (AW) edge[bend left] node[sloped, anchor=center, above, align=left] {PSEL = High \\ PWrite = High \\ PEnable = High } (AWrite);
+\path[->] (AWrite) edge[bend left] node[sloped, anchor=center, above, align=left] { } (AW);
+\path[->] (ARead) edge[bend right] node[sloped, anchor=center, above, align=left] { } (AW);
 
-
+\path[->] (AW) edge[loop above] node[sloped, anchor=center, above] {} (AW); 
+\end{tikzpicture}
+\end{center}
+\caption{APB3 States}
+\end{figure}
 
 
 
