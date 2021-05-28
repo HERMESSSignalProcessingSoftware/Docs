@@ -105,9 +105,10 @@ Befor lefting this waiting state the machine will be calculating the new page ad
 \textit{CSR}(30) will be set to 0. TODO: ADD Name of this bit here! \\\\
 To fill the two external memories evenly, the page address will be increased at every second time we reached this state. To prevent this machine form an invalid memory access the address will be set to zero. 
 \subsubsection{Init}
-Signal \textit{WriteEnable} transmission to high, enables the internal RAM.\\\\
-Signal \textit{InternalAddr2Mem} will be set to 0x01. 
-Signal \textit{InternalData2Mem} will be setup with SPI command (0x12) at bits 24 to 31. The lower bits will be setup to the page address, saved in register \textit{StampFSMR1} later used as \textit{R1}. 
+Signal \textit{WriteEnable} transmission to high, enables the internal RAM.\\
+Signal \textit{InternalAddr2Mem} will be set to 0x01. \\
+Signal \textit{InternalData2Mem} will be setup with SPI command (0x12) at bits 24 to 31. The lower bits will be setup to the page address, saved in register \textit{StampFSMR1} later used as \textit{R1}. \\
+Register \textit{StampFSMPC}, later referred as \textit{PC} set to the address of the SPI command (0x00000001). 
 \subsubsection{Init1} 
 Signal \textit{InternalAddr2Mem} will be set to 0x02. 
 Signal \textit{InternalData2Mem} bits 24 to 31 holdes the last byte (bit 0 to 7) of \textit{R1} followed by an hard coded value of 0x7FFFFF to mark the page as used on the external memory. 
@@ -181,7 +182,7 @@ In state \textit{Working1} the system is transmitting the Stamp1ShadowReg2 to th
 %\node[state] (Prepare) at (0,0) {Prepare};
 \node[state, right of = Prepare] (Working) at (0,0) {Working};
 \node[state, right of = Working] (Working1) {Working1};
-\node[state, below of = Working, align = left] (STAMP2prep) {Stamp X +1 \\ Working\\ End1};
+\node[state, right of = Working1, align = left] (STAMP2prep) {Stamp X +1 \\ Working\\ End1};
 \coordinate (start) at ($(Working) + (-1.8cm, 0cm) $);
 \path[black, ultra thick, draw, ->] (start) -- (Working);
 %\path[->] (Prepare) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working);
@@ -195,10 +196,57 @@ In state \textit{Working} the system is transmitting the StampXShadowReg1 to the
 In state \textit{Working1} the system is transmitting the StampXShadowReg2 to the internal RAM. After state \textit{Working1} this system will be switch to state \textit{StampX + 1} with substate \textit{Working}. \\\\
 Note: $\{\text{X} : \text{X} \in \{3, 4, 5, 6\} \} $\\
 Note: If X = 6 the system will change the state to \textit{End1} substate \textit{Working}.
+
 \subsubsection{End1}
+\begin{figure}[htb] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
 
+%\node[state] (Prepare) at (0,0) {Prepare};
+\node[state, right of = Prepare] (Working) at (0,0) {Working};
+\node[state, right of = Working] (Working1) {Working1};
+\node[state, right of = Working1, align = left] (STAMP2prep) {End2 \\ Prepare};
+\coordinate (start) at ($(Working) + (-1.8cm, 0cm) $);
+\path[black, ultra thick, draw, ->] (start) -- (Working);
+%\path[->] (Prepare) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working);
+\path[->] (Working) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working1);
+\path[->] (Working1) edge[bend left] node[sloped, anchor=center, below, align=left] {} (STAMP2prep);
+\end{tikzpicture}
+\end{center}
+\caption{End 1 substates}
+\end{figure}
+\noindent
+In substate \textit{Working} the system writes 0x0 to the next address after the last value of state \textit{Stamp6} \textit{Working1} to mark the end of a dataset. \\
+Substate \textit{Working1} the system saves the value of the current memory counter, referring to the last address the system used in internal RAM, to Register \textit{StampFSMR2}, later referred to as \textit{R2}. \\
+Signal \textit{WriteEnable} set to low level. \\\\ 
+If variable \textit{MemoryCnt} is 128, the system will be switch to state \textit{End2} substate \textit{Prepare}. In all other cases the system will be waiting like state \textit{Waiting} but it switches to state \textit{CopyShadow}. 
+\subsubsection{End2} 
+\begin{figure}[htb] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4.5cm, black, ultra thick]
 
+\node[state] (Prepare) at (0,0) {Prepare};
+\node[state, right of = Prepare] (Working)  {Working};
+\node[state, right of = Working] (Working1) {Working1};
+\node[state, above of = Working1, align = left] (E3P) {End3\\ Prepare};
+\coordinate (start) at ($(Prepare) + (-1.8cm, 0cm) $);
+\path[black, ultra thick, draw, ->] (start) -- (Prepare);
+\path[->] (Prepare) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working);
+\path[->] (Working) edge[bend left] node[sloped, anchor=center, above, align=left] {TempCounter = 129} (E3P);
+\path[->] (Working) edge[bend left] node[sloped, anchor=center, above, align=left] {TempCounter $\neq$ 129} (Working1);
+\path[->] (Working1) edge[bend left] node[sloped, anchor=center, below, align=left] {InternalBusy = Low} (Prepare);
+\path[->] (Working1) edge[loop above] node[sloped, anchor=center, above] {InternalBusy = High} (Working1); 
+\end{tikzpicture}
+\end{center}
+\caption{End 2 substates}
+\end{figure}
+\noindent
+In substate \textit{Prepare} the system sets the signal \textit{InternalAddr2Mem} to PC and markes SPI as busy by setting the bit 29 of CSR to high. \\\\
+Substate \textit{Working} is used to determinate the next state. State \textit{End3} substate \textit{Prepare} will be next if variable \textit{TempCounter} is 129. In all other cases the system will set \textit{TempCounter} to the value of \textit{PC} and increase the value of \textit{TempCounter} by one. After increasing the value will be assigned to register \textit{PC}. \\\\
+In substate \textit{Working1} the system sets signal \textit{enableSPI} to high level. If signal \textit{InternalBusy} is not set, the system
+writes the content of Signal / Register \textit{InternalDataFromMemory} to the register \textit{SPITransmitReg}. This is triggering an SPI transmission. The substate will changed to \textit{Prepare} while \textit{InternalBusy} is not set. If signal \textit{InternalBusy} is set, the substate will reset the signal \textit{enableSPI} to low. 
 
+\subsubsection{End3}
 
 
 
