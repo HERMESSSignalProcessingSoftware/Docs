@@ -251,7 +251,7 @@ This state has not substates, it is used to clean up the state machine after tra
 Signal \textit{enableSPI} is set to low level. \\
 Variable \textit{TempCounter} is set to zero. \\
 SPI busy marker at register \textit{CSR} bit 29 is set to zero.\\ 
-The next SPI address is calculated. If \textit{SPIaddr} is zero, the next one is one. Otherwise, \textit{SPIAddr} is one the next one is zero. This will be saved at register \textit{CSR} bit 1 and 30. As \textit{current SPI address indicator}. 
+The next SPI address is calculated. If \textit{SPIaddr} is zero, the next one is one. Otherwise, \textit{SPIAddr} is one the next one is zero. This will be saved at register \textit{CSR} bit 1 and 31 as \textit{current SPI address indicator}. 
 
 
 
