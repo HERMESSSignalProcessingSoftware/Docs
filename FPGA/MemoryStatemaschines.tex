@@ -76,22 +76,141 @@
 		\textbf{Default}\\ \cline{2-12}
 \endhead
  			& 0 	& 1 & 0 & 1 & \multicolumn{2}{c|}{--} & \multicolumn{2}{c|}{--} & 0 & 1 & -- \\ \hline
-Nicht definiert 	& 	& \small{Waiting} &  & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & &  &  \\ \hline
-Waiting 		& 	& & & \small{Preparing} & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & &  \\ \hline
-Preparing		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Init} \\ \hline
-Init			& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Init1} \\ \hline
-CopyShadow	& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp1} \\ \hline
-Stamp1		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp2} \\ \hline
-Stamp2		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp3} \\ \hline
-Stamp3		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp4} \\ \hline
-Stamp5		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Stamp6} \\ \hline
-Stamp6		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{End1} \\ \hline
-End1			& 	& & & \tiny{CopyShadow} & \multicolumn{2}{c|}{END2 bei 128} & \multicolumn{2}{c|}{} & & & \\ \hline
-End2			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{END3 bei 129} & & & \small{End2}\\ \hline
-End3			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & & \small{Waiting}\\ \hline
+Nicht definiert 	& 	& \small{Waiting} &  & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked &  \\ \hline
+Locked 		& 	& &  & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & Waiting & Locked &  \\ \hline
+Waiting 		& 	& & & \small{Preparing} & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked &  \\ \hline
+Preparing		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Init} \\ \hline
+Init			& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Init1} \\ \hline
+CopyShadow	& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Stamp1} \\ \hline
+Stamp1		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Stamp2} \\ \hline
+Stamp2		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Stamp3} \\ \hline
+Stamp3		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Stamp4} \\ \hline
+Stamp5		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Stamp6} \\ \hline
+Stamp6		& 	& & & & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{End1} \\ \hline
+End1			& 	& & & \tiny{CopyShadow} & \multicolumn{2}{c|}{END2 bei 128} & \multicolumn{2}{c|}{} & & Locked & \\ \hline
+End2			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{END3 bei 129} & & Locked & \small{End2}\\ \hline
+End3			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \small{Waiting}\\ \hline
 \caption{Memory Controllunit Statemachine Übergangstabelle}
 \end{longtable}
 \renewcommand{\arraystretch}{1.0} 
-\subsection{Memory Controllunit FSM Substates}
-ASDG
 \end{landscape}
+\subsection{Memory Controllunit FSM Substates}
+\subsubsection{Locked} 
+If controllunit status register (\textit{CSR}) bit 2 is set, the controllunit will enter a \textit{Locked} state. It leaves this state of in activity with CSR bit 2 transmission to a low state. The next state is \textit{Waiting}. \\\\
+Note: Setting CSR(2) to high will cancel all operations of the controllunit except of the AMBA operations which are not part of this statemachine. 
+\subsubsection{Waiting} 
+To begin a new complete page (512 byte of memory) the controlunit will wait for \textit{Dataready} (\textit{drdy}) 1 to 6 to switch to a high state. If all of them are at a high state or the component \textit{Watchdog} will present its \textit{WatchdogGo} signal on a high state the waiting state will be left. \\\\
+Befor lefting this waiting state the machine will be calculating the new page address of the external memory. The address of the internal memory will be calculated during this phase. 
+\subsubsection{Preparing} 
+\textit{CSR}(30) will be set to 0. TODO: ADD Name of this bit here! \\\\
+To fill the two external memories evenly, the page address will be increased at every second time we reached this state. To prevent this machine form an invalid memory access the address will be set to zero. 
+\subsubsection{Init}
+Signal \textit{WriteEnable} transmission to high, enables the internal RAM.\\\\
+Signal \textit{InternalAddr2Mem} will be set to 0x01. 
+Signal \textit{InternalData2Mem} will be setup with SPI command (0x12) at bits 24 to 31. The lower bits will be setup to the page address, saved in register \textit{StampFSMR1} later used as \textit{R1}. 
+\subsubsection{Init1} 
+Signal \textit{InternalAddr2Mem} will be set to 0x02. 
+Signal \textit{InternalData2Mem} bits 24 to 31 holdes the last byte (bit 0 to 7) of \textit{R1} followed by an hard coded value of 0x7FFFFF to mark the page as used on the external memory. 
+\subsubsection{CopyShadow} 
+Signal \textit{datareadyreset} set to high level.\\\\
+Copying the data of each stamp to the corresponding STAMP shadow registers. \\
+All six databus will be mapped to 384 bit wide bus at the component \textit{Memory}. \\\\
+\begin{longtable} [htb] { | p{0.45 \linewidth} | p{0.45\linewidth} | } \hline
+		\textbf{Signal from} & \textbf{Connected to} \\ \hline
+\endhead
+	STAMP 1 & Databus 320 to 383 \\ \hline 
+	STAMP 2 & Databus 256 to 319 \\ \hline 
+	STAMP 3 & Databus 192 to 255 \\ \hline
+	STMAP 4 & Databus 128 to 191 \\ \hline
+	STAMP 5 & Databus 64 to 127 \\ \hline
+	STAMP 6 & Databus 0 to 63 \\ \hline 	
+\end{longtable} 
+Register \textit{StampXShadowReg1} holds the bits 32 to 63 of the incoming 64 bit bus. \\ 
+Register \textit{StampXShadowReg2} holds the bits 0 to 31 of the incoming 64 bit bus. 
+Note: $\{ \text{X} : \textit{X} \in  \{1, ..., 6\} \}$ 
+\subsubsection{STAMP 1}
+\begin{figure}[htb] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+
+\node[state] (Prepare) at (0,0) {Prepare};
+\node[state, right of = Prepare] (Working) {Working};
+\node[state, right of = Working] (Working1) {Working1};
+\node[state, below of = Working, align = left] (STAMP2prep) {Stamp 2 \\ Prepare};
+\coordinate (start) at ($(Prepare) + (-1.8cm, 0cm) $);
+\path[black, ultra thick, draw, ->] (start) -- (Prepare);
+\path[->] (Prepare) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working);
+\path[->] (Working) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working1);
+\path[->] (Working1) edge[bend left] node[sloped, anchor=center, below, align=left] {} (STAMP2prep);
+\end{tikzpicture}
+\end{center}
+\caption{Stamp 1 substates}
+\end{figure}
+The transmission of \textit{Prepare} to \textit{Working1} will be after each clock cycle. \\\\ 
+In state \textit{Prepare}  the system will enable the writing to the internal RAM by setting signal \textit{WriteEnable} to high. 
+Also signal \textit{getTime} is set to a high level, to gather the current timestamp form the timestamp module. \\\\
+In state \textit{Working} the system is transmitting the Stamp1ShadowReg1 to the internal RAM. 
+In state \textit{Working1} the system is transmitting the Stamp1ShadowReg2 to the internal RAM. After state \textit{Working1} this system will be switch to state \textit{Stamp2} with substate \textit{Prepare}. 
+\subsubsection{STAMP 2}
+\begin{figure}[htb] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+
+\node[state] (Prepare) at (0,0) {Prepare};
+\node[state, right of = Prepare] (Working) {Working};
+\node[state, right of = Working] (Working1) {Working1};
+\node[state, below of = Working, align = left] (STAMP3prep) {Stamp 3 to 6 \\ Working};
+\coordinate (start) at ($(Prepare) + (-1.8cm, 0cm) $);
+\path[black, ultra thick, draw, ->] (start) -- (Prepare);
+\path[->] (Prepare) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working);
+\path[->] (Working) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working1);
+\path[->] (Working1) edge[bend left] node[sloped, anchor=center, below, align=left] {} (STAMP3prep);
+\end{tikzpicture}
+\end{center}
+\caption{Stamp 2 substates}
+\end{figure}
+In state \textit{Prepare} the system switches signal \textit{getTime} to a low level. \\\\
+In state \textit{Working} the system is transmitting the Stamp1ShadowReg1 to the internal RAM. \\\\
+In state \textit{Working1} the system is transmitting the Stamp1ShadowReg2 to the internal RAM. After state \textit{Working1} this system will be switch to state \textit{Stamp3} with substate \textit{Working}. 
+
+\subsubsection{STAMP 3 to 6} 
+\begin{figure}[htb] 
+\begin{center}
+\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+
+%\node[state] (Prepare) at (0,0) {Prepare};
+\node[state, right of = Prepare] (Working) at (0,0) {Working};
+\node[state, right of = Working] (Working1) {Working1};
+\node[state, below of = Working, align = left] (STAMP2prep) {Stamp X +1 \\ Working\\ End1};
+\coordinate (start) at ($(Working) + (-1.8cm, 0cm) $);
+\path[black, ultra thick, draw, ->] (start) -- (Working);
+%\path[->] (Prepare) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working);
+\path[->] (Working) edge[bend left] node[sloped, anchor=center, below, align=left] {} (Working1);
+\path[->] (Working1) edge[bend left] node[sloped, anchor=center, below, align=left] {} (STAMP2prep);
+\end{tikzpicture}
+\end{center}
+\caption{Stamp 3 to 6 substates}
+\end{figure}
+In state \textit{Working} the system is transmitting the StampXShadowReg1 to the internal RAM. 
+In state \textit{Working1} the system is transmitting the StampXShadowReg2 to the internal RAM. After state \textit{Working1} this system will be switch to state \textit{StampX + 1} with substate \textit{Working}. \\\\
+Note: $\{\text{X} : \text{X} \in \{3, 4, 5, 6\} \} $\\
+Note: If X = 6 the system will change the state to \textit{End1} substate \textit{Working}.
+\subsubsection{End1}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
