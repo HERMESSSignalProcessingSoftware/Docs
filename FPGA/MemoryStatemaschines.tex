@@ -3,7 +3,7 @@
 %    signal ControllUnitState        : typeCUState;
 %    type typeStampSubstate is (Prepare, Working, Working1);
 %    signal ControllUnitSubState     : typeStampSubstate;
-\subsection{Memory Statemachines}
+\section{Memory Statemachines}
 \begin{landscape}
 \begin{figure}[htb] 
 \begin{center}
@@ -94,25 +94,25 @@ End3			& 	& & &  & \multicolumn{2}{c|}{} & \multicolumn{2}{c|}{} & & Locked & \s
 \end{longtable}
 \renewcommand{\arraystretch}{1.0} 
 \end{landscape}
-\subsection{Memory Controllunit FSM description}
-\subsubsection{Locked} 
+\section{Memory Controllunit FSM description}
+\subsection{Locked} 
 If controllunit status register (\textit{CSR}) bit 2 is set, the controllunit will enter a \textit{Locked} state. It leaves this state of in activity with CSR bit 2 transmission to a low state. The next state is \textit{Waiting}. \\\\
 Note: Setting CSR(2) to high will cancel all operations of the controllunit except of the AMBA operations which are not part of this statemachine. 
-\subsubsection{Waiting} 
+\subsection{Waiting} 
 To begin a new complete page (512 byte of memory) the controlunit will wait for \textit{Dataready} (\textit{drdy}) 1 to 6 to switch to a high state. If all of them are at a high state or the component \textit{Watchdog} will present its \textit{WatchdogGo} signal on a high state the waiting state will be left. \\\\
 Befor lefting this waiting state the machine will be calculating the new page address of the external memory. The address of the internal memory will be calculated during this phase. 
-\subsubsection{Preparing} 
+\subsection{Preparing} 
 \textit{CSR}(30) will be set to 0. TODO: ADD Name of this bit here! \\\\
 To fill the two external memories evenly, the page address will be increased at every second time we reached this state. To prevent this machine form an invalid memory access the address will be set to zero. 
-\subsubsection{Init}
+\subsection{Init}
 Signal \textit{WriteEnable} transmission to high, enables the internal RAM.\\
 Signal \textit{InternalAddr2Mem} will be set to 0x01. \\
 Signal \textit{InternalData2Mem} will be setup with SPI command (0x12) at bits 24 to 31. The lower bits will be setup to the page address, saved in register \textit{StampFSMR1} later used as \textit{R1}. \\
 Register \textit{StampFSMPC}, later referred as \textit{PC} set to the address of the SPI command (0x00000001). 
-\subsubsection{Init1} 
+\subsection{Init1} 
 Signal \textit{InternalAddr2Mem} will be set to 0x02. 
 Signal \textit{InternalData2Mem} bits 24 to 31 holdes the last byte (bit 0 to 7) of \textit{R1} followed by an hard coded value of 0x7FFFFF to mark the page as used on the external memory. 
-\subsubsection{CopyShadow} 
+\subsection{CopyShadow} 
 Signal \textit{datareadyreset} set to high level.\\\\
 Copying the data of each stamp to the corresponding STAMP shadow registers. \\
 All six databus will be mapped to 384 bit wide bus at the component \textit{Memory}. \\\\
@@ -152,7 +152,7 @@ In state \textit{Prepare}  the system will enable the writing to the internal RA
 Also signal \textit{getTime} is set to a high level, to gather the current timestamp form the timestamp module. \\\\
 In state \textit{Working} the system is transmitting the Stamp1ShadowReg1 to the internal RAM. 
 In state \textit{Working1} the system is transmitting the Stamp1ShadowReg2 to the internal RAM. After state \textit{Working1} this system will be switch to state \textit{Stamp2} with substate \textit{Prepare}. 
-\subsubsection{STAMP 2}
+\subsection{STAMP 2}
 \begin{figure}[htb] 
 \begin{center}
 \begin{tikzpicture}[node distance = 4cm, black, ultra thick]
@@ -174,7 +174,7 @@ In state \textit{Prepare} the system switches signal \textit{getTime} to a low l
 In state \textit{Working} the system is transmitting the Stamp1ShadowReg1 to the internal RAM. \\\\
 In state \textit{Working1} the system is transmitting the Stamp1ShadowReg2 to the internal RAM. After state \textit{Working1} this system will be switch to state \textit{Stamp3} with substate \textit{Working}. 
 
-\subsubsection{STAMP 3 to 6} 
+\subsection{STAMP 3 to 6} 
 \begin{figure}[htb] 
 \begin{center}
 \begin{tikzpicture}[node distance = 4cm, black, ultra thick]
@@ -197,7 +197,7 @@ In state \textit{Working1} the system is transmitting the StampXShadowReg2 to th
 Note: $\{\text{X} : \text{X} \in \{3, 4, 5, 6\} \} $\\
 Note: If X = 6 the system will change the state to \textit{End1} substate \textit{Working}.
 
-\subsubsection{End1}
+\subsection{End1}
 \begin{figure}[htb] 
 \begin{center}
 \begin{tikzpicture}[node distance = 4cm, black, ultra thick]
@@ -220,7 +220,7 @@ In substate \textit{Working} the system writes 0x0 to the next address after the
 Substate \textit{Working1} the system saves the value of the current memory counter, referring to the last address the system used in internal RAM, to Register \textit{StampFSMR2}, later referred to as \textit{R2}. \\
 Signal \textit{WriteEnable} set to low level. \\\\ 
 If variable \textit{MemoryCnt} is 128, the system will be switch to state \textit{End2} substate \textit{Prepare}. In all other cases the system will be waiting like state \textit{Waiting} but it switches to state \textit{CopyShadow}. 
-\subsubsection{End2} 
+\subsection{End2} 
 \begin{figure}[htb] 
 \begin{center}
 \begin{tikzpicture}[node distance = 4.5cm, black, ultra thick]
@@ -246,14 +246,14 @@ Substate \textit{Working} is used to determinate the next state. State \textit{E
 In substate \textit{Working1} the system sets signal \textit{enableSPI} to high level. If signal \textit{InternalBusy} is not set, the system
 writes the content of Signal / Register \textit{InternalDataFromMemory} to the register \textit{SPITransmitReg}. This is triggering an SPI transmission. The substate will changed to \textit{Prepare} while \textit{InternalBusy} is not set. If signal \textit{InternalBusy} is set, the substate will reset the signal \textit{enableSPI} to low. 
 
-\subsubsection{End3}
+\subsection{End3}
 This state has not substates, it is used to clean up the state machine after transmitting its data to the memory controllers. \\
 Signal \textit{enableSPI} is set to low level. \\
 Variable \textit{TempCounter} is set to zero. \\
 SPI busy marker at register \textit{CSR} bit 29 is set to zero.\\ 
 The next SPI address is calculated. If \textit{SPIaddr} is zero, the next one is one. Otherwise, \textit{SPIAddr} is one the next one is zero. This will be saved at register \textit{CSR} bit 1 and 31 as \textit{current SPI address indicator}. 
 
-\subsection{APB3 FSM}
+\section{APB3 FSM}
 
 
 \begin{figure}[htb] 

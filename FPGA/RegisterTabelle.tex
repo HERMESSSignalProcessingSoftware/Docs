@@ -1,10 +1,12 @@
 %Register Tabelle
 
-\subsubsection{APB3 REg blaah Name}
+\section{Memory APB3 Registers}
+\subsection{Register Mapping}
+\label{sec:apbRegDec}
+\renewcommand{\arraystretch}{1.5}
 \begin{longtable} [htb] { |p{0.3\linewidth}|p{0.14\linewidth}|p{0.14\linewidth}|p{0.3\linewidth}| } \hline
-	\label{tab:table3}\\
-	\hline
-	\textbf{Name} & \textbf{Addr}& \textbf{R/W}&\textbf{Beschreibung}\\
+	\label{tab:table3}
+	\textbf{Name} & \textbf{Addr}& \textbf{R/W}&\textbf{Describtion}\\
 	\hline
 	Stamp1ShadowReg1&0x04&R&\\
 	\hline
@@ -34,16 +36,27 @@
 	\hline
 	CurrentAddrReg&0x38&R&\\
 	\hline
-	SPITransmitReg&0x3C&R + W&beschreibung\\
+	SPITransmitReg&0x3C&R + W& Look at section \ref{sec:SPITxReg} \\
 	\hline
 	SPIRecReg&0x40&R&\\
 	\hline
-	ConfigStatusReg&0x44&R + W&beschreibung\\
+	ConfigStatusReg&0x44&R + W& Look at section \ref{sec:ConStReg}\\
 	\hline
-	CommandReg&0x48&R + W&beschreibung\\
+	CommandReg&0x48&R + W& Look at section \ref{sec:RMShadowReg}\\
 	\hline
 	ReadMemoryShadowReg&0x4C&R&\\
 	\hline
 \caption{Register Map}
 \end{longtable}
+\renewcommand{\arraystretch}{1.0}
+\subsection{SPI Transmit Register} 
+\label{sec:SPITxReg}
+TODO
+\subsection{Config Status Register} 
+\label{sec:ConStReg}
+TODO
+\subsection{Read Memory Shadow Register} 
+\label{sec:RMShadowReg}
+TODO
+
 	

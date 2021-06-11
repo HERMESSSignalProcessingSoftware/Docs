@@ -1,12 +1,12 @@
-\subsection{Komponente: Stamp}
+\section{Komponente: Stamp}
 \label{bes:Stamp}
 Die STAMP Systemkomponente beschreibt einen Logikblock, der für die Kommunikation mit dem ADS 1147 zuständig ist. Siehe Abbildung \ref{fig:Stamp}. 
 Zur Kommunikation mit dem ADS 1147 Analog - Digital - Wandlern (ADC) , wird ein SPI Bus genutzt. Der ADC wird durch die Komponente Stamp eingestellt, die entsprechenden Werte können durch den angebrachten AMBA Bus geladen werden. Die entsprechenden Werte werden von dem im SoC integrierten Microcontroller geladen werden. 
 Der die beiden ADCs, welche mit dem dem Dehnungsmessstreifen (SGR) verbunden sind werden mit einer Geschwindigkeit von 2 kSp/s gewandelt. Der ADC an dem PT100 wird mit 10 Sp/s betrieben. 
 % TODO: Mehr dazu schreiben, Jonathans komponente
-\subsection{Komponente: Memory}
+\section{Komponente: Memory}
 \label{bes:memory}
-\subsection{Komponente: Watchdog}
+\section{Komponente: Watchdog}
 Der Watchdog implementiert seinen eigenen Timer zur Überwachung und Steuerung der Stamp - Komponente. Der Watchdog Timer wird auf 2 ms eingestellt. In dieser Zeit sollten die Stamps vier Werte geliefert haben. Nachfolgendes Diagramm zeigt das zeitliche Verhalten des Systems. 
 \renewcommand{\arraystretch}{1.5}
 \begin{table}[htb]
