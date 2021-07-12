@@ -7,7 +7,8 @@
 }
 
 \pgfdeclarelayer{background}
-\pgfsetlayers{background,main}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{main,background,foreground}
 
 \begin{landscape}
 \begin{figure}[h]
@@ -85,35 +86,25 @@
 \node[rectangle, draw, below of = F1S3rl, node distance = .75cm, minimum width = 2.5cm, minimum height = .5cm] (F1S3amba) {AMBA Conn. };
 \node[rectangle, draw, black, very thick, fit  = (F1S3name) (F1S3rl) (F1S3amba), inner sep=2mm, outer sep = 2mm] (compStamp3) {};
 
-%Memory unit
-\node[right  = of F1S1name] (F1MemName) {c Memory};
-\node[vhdlc, below of =  F1MemName, node distance = 1.0cm, xshift=-.4cm] (F1MemSpi) {2x SPI};
-\node[rectangle, draw, black, minimum height = 1cm, minimum width = 3cm, right of = F1MemSpi, node distance = 2.5cm] (F1MemCu){Controll Unit};
-\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6 cm, below of = F1MemSpi, node distance = 1.5cm, xshift = .5cm] (F1MemTG) at ($(F1MemSpi)!0.5!(F1MemCu)$) {Timestamp Generator};
-\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemTG, node distance = 1.5cm] (F1MemAmber) {AMBA Connector};
-
-
-\node[rectangle, draw, black, very thick, fit=(F1MemName)(F1MemAmber), inner sep = 2mm, outer sep = 2mm] (compMemory){};
-
-%SoC Controllunit
-\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemAmber , node distance = 3cm] (F1SoCControll) {AMBA Connector};
-\node[above  = of F1SoCControll, xshift=-.4cm, yshift=-1.7cm] (F1SoCcuName) {c Global Control Unit};
-\node[rectangle, draw, black, very thick, fit = (F1SoCcuName)(F1SoCControll), inner sep = 2mm, outer sep = 2mm] (compSoCCu) {};
-
-%Watchdog
-\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = compSoCCu , node distance = 3.5cm] (F1Watchdog) {Watchdog Statemachine };
-\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1Watchdog, node distance = 1.5cm] (F1WtdTimer) {AMBA Connector};
-\node[above of = F1Watchdog, xshift = -1.2cm, node distance = 1cm] (F1WdtName) {c Watchdog};
-
-\node[rectangle, draw, black, very thick, fit = (F1WdtName)(F1WtdTimer), inner sep = 2mm, outer sep = 2mm] (compWatchdog) {};
 
 %STAMP rechts
-\node[black, right of = F1MemName, node distance = 6cm] (F1S4name) {\small{c STAMP \#4}};
+\node[black, right of = F1S1name, node distance = 12cm] (F1S4name) {\small{c STAMP \#4}};
 \node[vhdlc, below of = F1S4name, node distance = 1cm, xshift = -.4cm] (F1S4cu) {CU};
 \node[vhdlc, right of = F1S4cu, node distance = 1.5cm] (F1S4spi) {SPI};
 \node[rectangle, draw, below of = F1S4spi, black, node distance = 1cm, minimum width = 2.5cm, minimum height = .5cm] (F1S4rl) at ($(F1S4spi)!0.5!(F1S4cu)$) {ResetLogic};
 \node[rectangle, draw, below of = F1S4rl, node distance = .75cm, minimum width = 2.5cm, minimum height = .5cm] (F1S4amba) {AMBA Conn. };
 \node[rectangle, draw, black, very thick, fit  = (F1S4name) (F1S4rl)(F1S4amba), inner sep=2mm, outer sep = 2mm] (compStamp4) {};
+
+%Memory unit
+%\node[vhdlc, below of =  F1MemName, node distance = 1.0cm, xshift=-.4cm] (F1MemSpi) {2x SPI};
+\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6 cm] at ($(F1S1cu)!.5!(F1S4cu) $) (F1MemCu){Controll Unit};
+\node[above of = F1MemCu, node distance = 1cm] (F1MemName) {c Memory};
+\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6 cm, below of = F1MemCu, node distance = 1.5cm] (F1MemTG)  {Timestamp Generator};
+\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemTG, node distance = 1.5cm] (F1MemSynch) {Synch. Statemachine };
+\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemSynch, node distance = 1.5cm] (F1MemAmber) {AMBA Connector};
+
+\node[rectangle, draw, black, very thick, fit=(F1MemName)(F1MemAmber), inner sep = 2mm, outer sep = 2mm] (compMemory){};
+
 
 \node[black, below = of F1S4name, yshift = -2.0cm] (F1S5name) {\small{c STAMP \#5}};
 \node[vhdlc, below of = F1S5name, node distance = 1cm, xshift = -.4cm] (F1S5cu) {CU};
@@ -255,8 +246,8 @@
 
 %AMBA BUS
 \coordinate (AB1) at ($(compMemory) - (1.5cm, 2.65cm)$);
-\coordinate (AB2) at ($(compSoCCu) - (1cm, 1.19cm)$);
-\coordinate (AB3) at ($(compWatchdog) - (1.5cm, 1.9cm)$);
+%\coordinate (AB2) at ($(compSoCCu) - (1cm, 1.19cm)$);
+%\coordinate (AB3) at ($(compWatchdog) - (1.5cm, 1.9cm)$);
 \coordinate (ABS1) at ($(F1S1amba) - (0cm, 0.5cm)$);
 \coordinate (ABS2) at ($(F1S2amba) - (0cm, 0.5cm)$);
 \coordinate (ABS3) at ($(F1S3amba) - (0cm, 0.5cm)$);
@@ -264,19 +255,31 @@
 \coordinate (ABS5) at ($(F1S5amba) - (0cm, 0.5cm)$);
 \coordinate (ABS6) at ($(F1S6amba) - (0cm, 0.5cm)$);
 
-\path[red!50, draw, line width = 2pt] (AB1) -- +(0cm, -.23cm);
-\path[red!50, draw, line width = 2pt] (AB2) -- +(0cm, -.35cm) ;
-\path[red!50, draw, line width = 2pt] (AB3) -- + (0cm, -1cm);
-\path[red!50, draw, line width = 2pt] (ABS1) -- +(0cm, -0.3cm) -- +(2.3cm, -0.3cm) -- + (2.3cm, -1.7cm) --+(3.6cm, -1.7cm); 
+%\path[red!50, draw, line width = 2pt] (AB1) -- +(0cm, -.23cm);
+%\path[red!50, draw, line width = 2pt] (AB2) -- +(0cm, -.35cm) ;
+%\path[red!50, draw, line width = 2pt] (AB3) -- + (0cm, -1cm);
+\path[red!50, draw, line width = 2pt] (ABS1) -- +(0cm, -0.3cm) -- +(2.3cm, -0.3cm) -- + (2.3cm, -1.7cm); 
 \path[red!50, draw, line width = 2pt] ($(ABS1) + (2.3cm, -1.7cm)$) -- +(0cm, -7.7cm); 
-\path[red!50, draw, line width = 2pt] (ABS2) -- +(0cm, -0.3cm) -- +(4.15cm, -0.3cm); 
-\path[red!50, draw, line width = 2pt] (ABS3) -- +(0cm, -0.3cm) -- +(3.6cm, -0.3cm); 
+\path[red!50, draw, line width = 2pt] (ABS2) -- +(0cm, -0.3cm) -- +(2.3cm, -0.3cm); 
+\path[red!50, draw, line width= 2pt] ($(ABS2) + (2.3cm, -1cm) $) -- ($(ABS5) + (-2.3cm, -1cm)$);
+\path[red!50, draw, line width = 2pt] (ABS3) -- +(0cm, -0.3cm) -- +(2.3cm, -0.3cm); 
 \path[red!50, draw, line width = 2pt] (ABS4) -- +(0cm, -0.3cm) -- +(-2.3cm, -0.3cm) -- +(-2.3cm, -1.7cm);
 \path[red!50, draw, line width = 2pt] (ABS5) -- +(0cm, -0.3cm) -- +(-2.3cm, -0.3cm);
 \path[red!50, draw, line width = 2pt] (ABS6) -- +(0cm, -0.3cm) -- +(-2.3cm, -0.3cm);
-\path[red!50, draw, line width = 2pt] ($(ABS6) + (-2.3cm, -0.3cm)$) -- +(-5cm, 0cm); 
+%\path[red!50, draw, line width = 2pt] ($(ABS6) + (-2.3cm, -0.3cm)$) -- +(-5cm, 0cm); 
 \path[red!50, draw, line width = 2pt] ($(ABS4) + (-2.3cm, -1.7cm)$) -- +(0cm, -7.7cm); 
-
+\coordinate (AMBAT1) at ($(ABS2) + (2.3cm, -1cm) $);
+\coordinate (AMBAT2) at ($(ABS5) + (-2.3cm, -1cm)$);
+\coordinate (AMBAT3) at ($(AMBAT1) !.5! (AMBAT2)$);
+\path[red!50, draw, line width = 2pt] ($(AMBAT1) !.5! (AMBAT2)$) -- ($(F1MemAmber) + (0cm, -.5cm) $);
+\path[red!50, draw, line width=2pt] (AMBAT3) -- +(0cm,- 5cm);
+%Interrupts
+\coordinate (IntE) at ($(AMBAT3) - (.5cm, 5cm)$);
+\coordinate (Int) at ($(F1MemAmber) - (0.5cm, 0.7cm)$);
+\coordinate (IntE1) at ($(AMBAT3) - (1.5cm, 5cm)$);
+\coordinate (Int1) at ($(F1MemAmber) - (1.5cm, 0.7cm)$);
+\path[blue!70, draw, line width = 2pt] (Int1) -- (IntE1);
+\path[blue!70, draw, line width = 2pt] (Int) -- (IntE);
 % Reset Logic
 \coordinate (rl6) at ($(compStamp6) - (1.78, 1cm)$);
 \coordinate (rl5) at ($(compStamp5) - (1.78, 1cm)$);
@@ -296,15 +299,17 @@
 
 \coordinate (rlC1) at ($(rl3) + (0cm, 3.3cm)$);
 \coordinate (rlC2) at ($(rl6) + (0cm, 3.3cm)$);
-\coordinate (rlC3) at ($(compWatchdog) + (0cm, 2.2cm)$);
+\coordinate (rlC3) at ($(F1MemAmber) + (0.5cm, -.7cm)$);
+%\coordinate (rlC3) at ($(compWatchdog) + (0cm, 2.2cm)$);
 \path[gray!70, draw, line width = 1.5pt] (rlC1) -- (rlC2);
-\path[gray!70, draw, line width = 1.5pt] (rlC3) -- + (0cm, -.3cm);
+\path[gray!70, draw, line width = 1.5pt] (rlC3) -- + (0cm, -2cm);
+%\path[gray!70, draw, line width = 1.5pt] (rlC3) -- + (0cm, -.3cm);
 
 
 %Internet Datenbus
 \coordinate (intCS6) at ($(compStamp6)-(1.55cm,0cm)$);
 \coordinate (intCS66) at ($(intCS6)-(0.5cm,0cm)$);
-\path[black, draw, line width = 3pt] (intCS6) -- +(-.5cm, 0cm);
+\path[black, draw, line width = 3pt] (intCS6) -- +(-.55cm, 0cm);
 
 \coordinate (intCS5) at ($(compStamp5)-(1.55cm,0cm)$);
 \path[black, draw, line width = 3pt] (intCS5) -- +(-.5cm, 0cm);
@@ -326,23 +331,28 @@
 \path[black, draw, line width = 3pt] (intCS3) -- +(.5cm, 0cm);
 \path[black, draw, line width = 3pt] (intCS11) -- +(0cm,.05cm) -- (intCS33) -- +(0cm, -0.05cm);
 \coordinate (memLeft) at ($(compMemory) - (2.55cm, 0cm)$);
-\coordinate (memRight) at ($(compMemory) + (2.55cm, 0cm)$);
-\path[black, draw, line width = 9pt] (memLeft) --+(-0.55cm,0cm);
-\path[black, draw, line width = 9pt] (memRight) --+(0.4cm,0cm);
-\coordinate (compWtd1) at ($(compWatchdog) -(2.55cm, 0cm)$);
-\coordinate (compWtd2) at ($(compWatchdog) +(2.55cm, 0cm)$);
-\path[black, draw, line width = 3pt] (compWtd1) -- +(-0.5cm,0cm);
-\path[black, draw, line width = 3pt] (compWtd2) -- +(0.45cm,0cm);
+\coordinate (memRight) at ($(compMemory) + (2.5cm, 0cm)$);
+\path[black, draw, line width = 9pt] (memLeft) --+(-1.55cm,0cm);
+\path[black, draw, line width = 9pt] (memRight) --+(1.4cm,0cm);
+%\coordinate (compWtd1) at ($(compWatchdog) -(2.55cm, 0cm)$);
+%\coordinate (compWtd2) at ($(compWatchdog) +(2.55cm, 0cm)$);
+%\path[black, draw, line width = 3pt] (compWtd1) -- +(-0.5cm,0cm);
+%\path[black, draw, line width = 3pt] (compWtd2) -- +(0.45cm,0cm);
 %Legende
-\node[below of = S6SGR2adc, node distance = 1.4cm] (legende) {Legende}; 
-\coordinate (l1) at ($(legende) -  (0cm, .5cm)$);
-\coordinate (l2) at ($(legende) -  (0cm, 1cm)$);
-\coordinate (l3) at ($(legende) -  (0cm, 1.5cm)$);
-\path[red!70, draw, line width = 2pt] (l1) -- +(1cm, 0cm) node[right]{AMBA};
-\path[gray!70, draw, line width = 1.5pt] (l2) -- +(1cm, 0cm) node[right]{Reset};
-\path[black, draw, line width = 3pt] (l3) -- +(1cm, 0cm) node[right](intDB){Int. Datenbus};
+\begin{pgfonlayer}{foreground}
+	\coordinate (leg) at ($(F1MemName) !.5! (F1S4name)$);
+	\node[node distance = 3cm] at ($(leg) + (0cm, 2.5cm)$) (legende) {Legende}; 
+	\coordinate (l1) at ($(legende) -  (0cm, .5cm)$);
+	\coordinate (l2) at ($(legende) -  (0cm, 1cm)$);
+	\coordinate (l3) at ($(legende) -  (-3cm, .5cm)$);
+	\coordinate (l4) at ($(legende) -  (-3cm, 1cm)$);
+	\path[red!70, draw, line width = 2pt] (l1) -- +(1cm, 0cm) node[right]{AMBA};
+	\path[gray!70, draw, line width = 1.5pt] (l2) -- +(1cm, 0cm) node[right]{Reset};
+	\path[black, draw, line width = 3pt] (l3) -- +(1cm, 0cm) node[right](intDB){Int. Datenbus};
+	\path[blue, draw, line width=2pt] (l4) -- +(1cm,0cm) node[right](intInt){Interrupts};
+\end{pgfonlayer}
 \begin{pgfonlayer}{background}
-	\node[rectangle, draw, black, fill=white, fit=(legende) (intDB), inner sep = 1mm, outer sep = 1mm, rounded corners = .5cm] (legendeall){};
+	\node[rectangle, draw, black, fill=white, fit=(legende) (intDB)(intInt), inner sep = 3mm, outer sep = 1mm, rounded corners = .5cm] (legendeall){};
 \end{pgfonlayer}
 \end{tikzpicture}
 \caption{Systemübersicht}
