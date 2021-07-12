@@ -100,8 +100,8 @@
 \node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6 cm] at ($(F1S1cu)!.5!(F1S4cu) $) (F1MemCu){Controll Unit};
 \node[above of = F1MemCu, node distance = 1cm] (F1MemName) {c Memory};
 \node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6 cm, below of = F1MemCu, node distance = 1.5cm] (F1MemTG)  {Timestamp Generator};
-\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemTG, node distance = 1.5cm] (F1MemSynch) {Synch. Statemachine };
-\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemSynch, node distance = 1.5cm] (F1MemAmber) {AMBA Connector};
+%\node[rectangle, draw, black, very thick, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemTG, node distance = 1.5cm] (F1MemSynch) {Synch. Statemachine };
+\node[rectangle, draw, black, minimum height = 1cm, minimum width = 4.6cm, below of = F1MemTG, node distance = 1.5cm] (F1MemAmber) {AMBA Connector};
 
 \node[rectangle, draw, black, very thick, fit=(F1MemName)(F1MemAmber), inner sep = 2mm, outer sep = 2mm] (compMemory){};
 
@@ -302,7 +302,7 @@
 \coordinate (rlC3) at ($(F1MemAmber) + (0.5cm, -.7cm)$);
 %\coordinate (rlC3) at ($(compWatchdog) + (0cm, 2.2cm)$);
 \path[gray!70, draw, line width = 1.5pt] (rlC1) -- (rlC2);
-\path[gray!70, draw, line width = 1.5pt] (rlC3) -- + (0cm, -2.3cm);
+\path[gray!70, draw, line width = 1.5pt] (rlC3) -- + (0cm, -3.8cm);
 %\path[gray!70, draw, line width = 1.5pt] (rlC3) -- + (0cm, -.3cm);
 
 
