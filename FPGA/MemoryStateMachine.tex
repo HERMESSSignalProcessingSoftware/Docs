@@ -6,10 +6,11 @@
 			\node[state, below of = ResyncEvent, node distance = 8cm] (S11) {S11};
 			\node[state, below left of = S11] (S1) {S1};
 			\node[red!50, state, above left of = start] (Error1) {Error 1};
-			\node[state, below of = Start, node distance = 8cm] (End1) {End 1};
+			\node[state, below of = start, node distance = 8cm] (End1) {End 1};
 			% Draw lines 
 			\coordinate (tempStart) at ($(start) - (2,-1)$);
 			\path[->, draw, black] (tempStart) -- node[sloped, anchor=center, above, align=left]{$\overline{reset}$} (start);
+			\path[->] (start) edge[loop left]  node[sloped, anchor=center, above,text width=3.5cm, align=left] {all other}(start);
 			\path[->] (start) edge[bend left] node[sloped, anchor=center, above,text width=3.5cm, align=left]{\small{\# Request Resync = $X_1$\\ AND \\ ResyncTimer = 0}} (ResyncEvent);
 			\path[->] (ResyncEvent) edge[bend left] (start);
 			\path[->] (start) edge[bend left] node[sloped, anchor=center, above,text width=3.2cm, align=left] {\small{\# new Avail $>$ 0}} (S1);

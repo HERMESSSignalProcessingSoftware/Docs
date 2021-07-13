@@ -1,0 +1,72 @@
+\begin{landscape}
+	\renewcommand{\arraystretch}{1.5}
+	\setlength\LTcapwidth{\textwidth} % default: 4in (rather less than \textwidth...)
+	\setlength\LTleft{0pt}            % default: \parindent
+	\setlength\LTright{0pt}           % default: \fill
+	\begin{longtable}[ht]{@{\extracolsep{\fill}}|l||*{14}{l|}}\hline 
+		\textbf{Status} & 
+		\multicolumn{2}{c|}{\textbf{$\overline{reset}$}} & 
+		\multicolumn{4}{c|}{\textbf{\# Request Resync} \&\& \textbf{ ResyncTimer} } & \multicolumn{2}{c|}{\textbf{\# New Avail}} & 
+		\multicolumn{4}{c|}{\textbf{WaitingTimer} \& \& \textbf{\# New Avail}} & 
+		\multicolumn{2}{c|}{\textbf{SyncTimer} } \\ \hline 
+		&
+		\multicolumn{2}{c|}{} & 
+		\multicolumn{2}{c|}{\textbf{\# Request Resync}} & \multicolumn{2}{c|}{\textbf{ ResyncTimer*} } & \multicolumn{2}{c|}{} & 
+		\multicolumn{2}{c|}{\textbf{WaitingTimer}} & \multicolumn{2}{c|}{\textbf{\# New Avail}} & 
+		\multicolumn{2}{c|}{} \\ \hline 
+		\textbf{Wert} & 
+		0 & 1 & 
+		== $X_1$ & $\neq X_1$ & 
+		== 0 & $\neq 0$ &
+		> 0 & == 6 &
+		== 0 & $\neq 0$ &
+		> 0 \&\&  $\geq ~X_2$ & > 0 \&\& < $X_2$ & 
+		\multicolumn{2}{c|}{ 0} \\ \hline 
+		\endhead
+		Undefined   & 
+		Start &  &  & & &  & &  & &  & & & 
+		\multicolumn{2}{c|}{ } \\ \hline 
+		Start & 
+		 &  & 
+		ResyncEvent &  & 
+		ResyncEvent &  &
+		S1 & &
+		 &  &
+		&  & 
+		\multicolumn{2}{c|}{ Error 1} \\ \hline 
+		S1 & 
+		 &  & 
+		 &  & 
+		 &  &
+		 & End 1 &
+		End 1 or S11 &  &
+		End 1 & S11 & 
+		\multicolumn{2}{c|}{ } \\ \hline 
+		S11 & 
+		 &  & 
+		 &  & 
+		\textit{ResyncEvent} & \textit{Start} &
+		 & &
+		 &  &
+		 &  & 
+		\multicolumn{2}{c|}{ } \\ \hline 
+		
+		ResyncEvent & 
+		
+		\multicolumn{14}{c|}{ Start } \\ \hline 
+		
+		End1 & 
+		\multicolumn{14}{c|}{ Start } \\ \hline 		
+		Error1 & 
+		&   & 
+		&  & 
+		&  &
+		&   &
+		&  &
+		&  & 
+		\multicolumn{2}{c|}{ } \\ \hline 
+		
+	\end{longtable}
+	\renewcommand{\arraystretch}{1.0}
+%	\renewcommand{\textwidth}{\temp}
+\end{landscape}
