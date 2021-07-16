@@ -13,5 +13,27 @@ The data will be stored on a 1Gbit external flash memory, connected to the MSS.
 \input{MemoryStateMachine.tex}
 \input{MemoryStateTable.tex}
 \subsection{Timestamp Generator}
-
+This component generates a timestamp, starting at \textit{enable} goes high. The internal prescaler is set to 24 which leads to a resolution of 1 $\mu$s.
+\begin{equation}
+	\begin{split}
+		f_{cpu} = 50~MHz \\ 
+		T_{cpu} = \frac{1}{f_{cpu}} = \frac{1}{50~MHz} = 20~ns \\
+		T_{res} = \frac{1}{f_{cpu}} \cdot 2 \cdot \left(24 + 1\right) = T_{cpu} * 2 * 25\\
+		T_{res} = 20~ns \cdot \left(25\right) = 1 \mu s
+	\end{split}
+\label{eq:prescaler}
+\end{equation}
+The timestamp will be copied in the 32 bit timestamp signal with the next rising edge of \textit{clk}. This leads to the decrement of the prescaler by one. This behaviour is mentiond in equation \ref{eq:prescaler} above.  The addition will take 2 clock cycles, therefor its neccessary to add a factor of two to the equation. \\ \\
+Timestamp overflow is not covered by the system. It will reach this condition after 71.58 minutes.
+\begin{equation}
+	\begin{split}
+		T_{overflow} = \frac{2^{32} - 1~\mu s}{10^{6} \frac{\mu s}{s}} = \frac{2^{32} - 1}{10^6 \frac{1}{s}} = 4294~s \\ 
+		T_{overflow, min} = \frac{T_{overflow}}{60 \frac{s}{min}} = 71.58~min
+	\end{split}
+\end{equation}
+In expectation of the flight time, there is more than enough space to prevent the system from reaching the overflow condition. 
 \subsection{AMBA}
+\input{APBFSM.tex} 
+\noindent
+The AMBA connection implements a slightly smaller finit state machine, which is shown in figure \ref{fig:memamba}. 
+Everytime the state machine reaches a state, the state will be excecuted after that the FSM will return to the waiting state. During the exceution the address will be used to access the corresponding register, see table \ref{tbl:registeraddress}.

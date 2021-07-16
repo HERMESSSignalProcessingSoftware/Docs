@@ -1,62 +1,179 @@
 %Register Tabelle
-
-\section{Memory APB3 Registers}
-\subsection{Register Mapping}
+\subsection{Memory APB3 Registers}
+\subsubsection{Register Mapping}
 \label{sec:apbRegDec}
 \renewcommand{\arraystretch}{1.5}
 \begin{longtable} [htb] { |p{0.3\linewidth}|p{0.14\linewidth}|p{0.14\linewidth}|p{0.3\linewidth}| } \hline
 	\label{tab:table3}
 	\textbf{Name} & \textbf{Addr}& \textbf{R/W}&\textbf{Describtion}\\
 	\hline
-	Stamp1ShadowReg1&0x04&R&\\
+	Stamp1ShadowReg1&0x04&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp1ShadowReg2&0x08&R&\\
+	Stamp1ShadowReg2&0x08&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp2ShadowReg1&0x0C&R&\\
+	Stamp2ShadowReg1&0x0C&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp2ShadowReg2&0x10&R&\\
+	Stamp2ShadowReg2&0x10&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp3ShadowReg1&0x14&R&\\
+	Stamp3ShadowReg1&0x14&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp3ShadowReg2&0x18&R&\\
+	Stamp3ShadowReg2&0x18&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp4ShadowReg1&0x1C&R&\\
+	Stamp4ShadowReg1&0x1C&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp4ShadowReg2&0x20&R&\\
+	Stamp4ShadowReg2&0x20&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp5ShadowReg1&0x24&R&\\
+	Stamp5ShadowReg1&0x24&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp5ShadowReg2&0x28&R&\\
+	Stamp5ShadowReg2&0x28&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp6ShadowReg1&0x2C&R&\\
+	Stamp6ShadowReg1&0x2C&R + W& Reset on write. \par Reset to 0x0. \\
 	\hline
-	Stamp6ShadowReg2&0x30&R&\\
+	Stamp6ShadowReg2&0x30&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	StartAddrReg&0x34&R + W&\\
+	SyncStatusReg&0x34&R + W& Look at section \ref{sec:syncStatusReg}.\\
 	\hline
-	CurrentAddrReg&0x38&R&\\
+	ConfigReg&0x38&R + W& Look at section \ref{sec:configReg}. \\
 	\hline
-	SPITransmitReg&0x3C&R + W& Look at section \ref{sec:SPITxReg} \\
+	ResetTimerValueReg&0x3C&R + W& Look at section \ref{sec:resettimervaluereg}. \\
 	\hline
-	SPIRecReg&0x40&R&\\
+	WaitingTimerValueReg&0x40&R + W& Look at section \ref{sec:WaitingTimerValueReg}.\\
 	\hline
-	ConfigStatusReg&0x44&R + W& Look at section \ref{sec:ConStReg}\\
+	ResyncTimerValueReg&0x44&R + W& Look at section \ref{sec:ResyncTimerValueReg}.\\
 	\hline
-	CommandReg&0x48&R + W& Look at section \ref{sec:RMShadowReg}\\
+	TimestampReg&0x48&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	ReadMemoryShadowReg&0x4C&R&\\
+	SyncStatusReg2&0x4C&R + W& Reset on write. \par Reset to 0x0. \par Look at section \ref{sec:SyncStatusReg2}.\\
 	\hline
-\caption{Register Map}
+\caption[Register map]{Register Map}
+\label{tbl:registeraddress}
 \end{longtable}
 \renewcommand{\arraystretch}{1.0}
-\subsection{SPI Transmit Register} 
-\label{sec:SPITxReg}
+\subsection{SyncStatus Register} 
+\label{sec:syncStatusReg}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{16 - \bit}
+			\rwbits{0}{4}{RE}
+			\rwbits{4}{1}{R6}
+			\rwbits{5}{1}{R5}
+			\rwbits{6}{1}{R4}
+			\rwbits{7}{1}{R3}
+			\rwbits{8}{1}{R2}
+			\rwbits{9}{1}{R1}
+			\rwbits{10}{1}{M6}
+			\rwbits{11}{1}{M5}
+			\rwbits{12}{1}{M4}
+			\rwbits{13}{1}{M3}
+			\rwbits{14}{1}{M2}
+			\rwbits{15}{1}{M1}
+			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register bits 0 to 15]{SyncStatus Register bits 0 to 15}
+	\label{fig:SSR11}
+\end{figure}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{32 - \bit}
+			\rwbits{0}{1}{PS}
+			\rwbits{1}{1}{PR}
+			\robits{2}{1}{}
+			\rwbits{3}{1}{AE}
+			\robits{4}{2}{}
+			\rwbits{6}{1}{O6}
+			\rwbits{7}{1}{O5}
+			\rwbits{8}{1}{O4}
+			\rwbits{9}{1}{O3}
+			\rwbits{10}{1}{O2}
+			\rwbits{11}{1}{O1}
+			\rwbits{12}{4}{RE}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register bits 31 to 16]{SyncStatus Register bits 31 to 15}
+	\label{fig:SSR12}
+\end{figure}
+\noindent
+M1 - M6: Bitmask for every stamp which has not provied a newAvails signal. \\
+R1 - R6: Bitmask for every stamp which is requesting a Resync. \\ 
+RE: 8 bit counter: the number of ResyncEvents. \\ 
+O1 - O6: StatusReg2 overflow marker. Means that the difference to the timestamp register is bigger than the size of 5 bits. \\ 
+AE: APB Error Address not known. \\ 
+PR: Pending Reading Interrupt. \\
+PS: Pending Synchronizer Interrupt. \\
+\subsection{SyncStatus Register 2} 
+\label{sec:SyncStatusReg2}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{16 - \bit}
+			\rwbits{0}{1}{S4}
+			\rwbits{1}{5}{S3}
+			\rwbits{6}{5}{S2}
+			\rwbits{11}{5}{S1}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register 2 bits 15 to 0]{SyncStatus Register 2 bits 15 to 0}
+	\label{fig:SSR21}
+\end{figure}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{32 - \bit}
+			\robits{0}{2}{}
+			\rwbits{2}{5}{S6}
+			\rwbits{7}{5}{S5}	
+			\rwbits{12}{4}{S4}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register bits 31 to 16]{SyncStatus Register bits 31 to 15}
+	\label{fig:SSR22}
+\end{figure}
+S1 - S6: 5 bit counter; relative distance to the Timestamp value. \\
+\subsection{Config  Register} 
+\label{sec:configReg}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{16 - \bit}
+			\robits{0}{9}{}
+			\rwbits{9}{3}{RS value}
+			\robits{12}{1}{}
+			\rwbits{13}{3}{NA value}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[Config Register bits 15 to 0]{Config Register bits 15 to 0}
+	\label{fig:CR1}
+\end{figure}
+\begin{figure}
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{32 - \bit}
+			\rwbits{0}{1}{EI}
+			\rwbits{1}{1}{CS}
+			\rwbits{2}{1}{CR}	
+			\robits{3}{13}{}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[Config Register bits 16 to 31]{Config Register bits 31 to 16}
+	\label{fig:CR2}
+\end{figure}
+\noindent
+NA value: Number of minimal neccessary \textit{newAvail} signals. Default 4. \\
+RS value: Number of minimal neccessary \textit{Request Resync} signals. Default 4. \\ 
+CR: Clear Read Interrupt. \\
+CS: Clear Synchronizer Interrupt. \\ 
+EI: Enable Interrupts. \\
+\subsection{ResetTimerValue Register} 
+\label{sec:resettimervaluereg}
 TODO
-\subsection{Config Status Register} 
-\label{sec:ConStReg}
+\subsection{WaitingTimerValue Register} 
+\label{sec:WaitingTimerValueReg}
 TODO
-\subsection{Read Memory Shadow Register} 
-\label{sec:RMShadowReg}
+\subsection{ResyncTimerValue Register} 
+\label{sec:ResyncTimerValueReg}
 TODO
 
 	
