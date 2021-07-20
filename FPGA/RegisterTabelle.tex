@@ -35,11 +35,11 @@
 	\hline
 	ConfigReg&0x38&R + W& Look at section \ref{sec:configReg}. \\
 	\hline
-	ResetTimerValueReg&0x3C&R + W& Look at section \ref{sec:resettimervaluereg}. \\
+	ResetTimerValueReg&0x3C&R + W& 32 bit value. \par Default at 0xFFFFFFFF. \par Counts clock rising edges. \\
 	\hline
-	WaitingTimerValueReg&0x40&R + W& Look at section \ref{sec:WaitingTimerValueReg}.\\
+	WaitingTimerValueReg&0x40&R + W&  32 bit value. \par Default at 0xFFFFFFFF. \par Counts clock rising edges. \\
 	\hline
-	ResyncTimerValueReg&0x44&R + W& Look at section \ref{sec:ResyncTimerValueReg}.\\
+	ResyncTimerValueReg&0x44&R + W&  32 bit value. \par Default at 0xFFFFFFFF. \par Counts clock rising edges.\\
 	\hline
 	TimestampReg&0x48&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
@@ -147,7 +147,7 @@ S1 - S6: 5 bit counter; relative distance to the Timestamp value. \\
 	\caption[Config Register bits 15 to 0]{Config Register bits 15 to 0}
 	\label{fig:CR1}
 \end{figure}
-\begin{figure}
+\begin{figure}[!htb]
 	\begin{center}
 		\begin{tikzpicture}
 			\bitrect{16}{32 - \bit}
@@ -166,14 +166,13 @@ RS value: Number of minimal neccessary \textit{Request Resync} signals. Default 
 CR: Clear Read Interrupt. \\
 CS: Clear Synchronizer Interrupt. \\ 
 EI: Enable Interrupts. \\
-\subsection{ResetTimerValue Register} 
-\label{sec:resettimervaluereg}
-TODO
-\subsection{WaitingTimerValue Register} 
-\label{sec:WaitingTimerValueReg}
-TODO
-\subsection{ResyncTimerValue Register} 
-\label{sec:ResyncTimerValueReg}
-TODO
-
-	
+\subsection{Calculating Timer Values}
+\label{sec:CTV}
+This only affects the registers \textit{ResetTimerValue}, \textit{WaitingTimerValue} and \textit{ResyncTimerValue}. \\ 
+The timer are designed as a countdown timer, if they are reaching the value zero, their action will be executed. The resolution of the timers is 20 ns, so the values will be calculated like equation \ref{eq:timer}.
+\begin{equation}
+	\begin{split}
+			\text{Value} = \frac{\text{Excpected Time}}{T_{cpu}} = \frac{\text{Excpected Time}}{20 ~ns} 
+	\end{split}
+\label{eq:timer}
+\end{equation}	
