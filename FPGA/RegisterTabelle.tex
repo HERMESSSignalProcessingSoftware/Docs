@@ -169,10 +169,106 @@ EI: Enable Interrupts. \\
 \subsection{Calculating Timer Values}
 \label{sec:CTV}
 This only affects the registers \textit{ResetTimerValue}, \textit{WaitingTimerValue} and \textit{ResyncTimerValue}. \\ 
-The timer are designed as a countdown timer, if they are reaching the value zero, their action will be executed. The resolution of the timers is 20 ns, so the values will be calculated like equation \ref{eq:timer}.
+The timer are designed as a countdown timer, if they are reaching the value zero, their action will be executed. The resolution of the timers is 20 ns, so the values will be calculated as shown in equation \ref{eq:timer}.
 \begin{equation}
 	\begin{split}
-			\text{Value} = \frac{\text{Excpected Time}}{T_{cpu}} = \frac{\text{Excpected Time}}{20 ~ns} 
+			\text{Value} = \frac{\text{Excpected Time} \left[s\right]}{T_{cpu}} = \frac{\text{Excpected Time }\left[s\right] }{20 ~ns} 
 	\end{split}
 \label{eq:timer}
 \end{equation}	
+Due to this equation the interval for Value is: $$\left\{\text{Value} \in \mathbb{N_0} \mid 0 \leq \text{Value} \leq 85 \right\}$$
+\subsection{Format}
+\label{sec:format}
+\begin{center}
+\begin{bytefield}[rightcurlyspace = 10pt]{32}
+		\memsection{0}{1FF}{5}{Meta Data} \\
+		\memsection{200}{1E848}{10}{Measurment Data} \\
+\end{bytefield} \\
+\textbf{Memory Map 1} Memory format of $\overline{cs_1}$ connected device. 
+\end{center}
+\begin{center}
+	\begin{bytefield}[rightcurlyspace = 10pt]{32}
+		\memsection{0}{1FF}{5}{- empty -} \\
+		\memsection{200}{1E848}{10}{Measurment Data} \\
+	\end{bytefield} \\
+	\textbf{Memory Map 2} Memory format of $\overline{cs_2}$ connected device. 
+\end{center}
+\subsubsection{Meta data}
+The memory region for the meta data is set to 512 pages. It is used to store the last knwon address pointer for the measurment values. This addresses are called \textit{page region pointer (ptr)}. 
+\begin{center}
+	\begin{bytefield}{32}
+		\wordbox[lrt]{1}{Page address 0x0} \\
+		\skippedwords \\
+		\wordbox[lrb]{1}{Page address 0x1FF} \\
+	\end{bytefield}
+\end{center}
+This pointers are continuous written, starting at page 0x0 at positon 0x0. Each 32 bit value represents one 32 bit page address. The empty space of each page is used for the next pointer. Therefore this memory region will be smaller with the program continuing it actions. 
+\begin{center}
+	\begin{bytefield}[rightcurlyspace = 10pt]{32}
+		\begin{rightwordgroup}{0x0}
+			\memsection{0}{3}{2}{Page Region Ptr} \\
+			\memsection{4}{7}{2}{Page Region Ptr} \\
+			\memsection{8}{B}{2}{Page Region Ptr} \\
+			\memsection{C}{ff}{4}{Empty Space}
+		\end{rightwordgroup} \\ 
+	\end{bytefield}
+\end{center}
+\subsubsection{Measurment data}
+This memory section is used for the measurment values. The default start address is 0x200. One Measurment result is stored in 60 byte of data, shown below. One page is 512 byte long, the measurment values will be stored in 480 bytes of this. The page usage is at 93.75 \%.   \\
+\begin{figure}[H]
+	\begin{center}
+		\begin{bytefield}[endianness=big] {32}
+			\bitheader{0, 31} \\
+			\wordbox{1}{Timestamp} \\ 
+			\wordbox{1}{STAMP 1} \\
+			\wordbox{1}{STAMP 1} \\
+			\wordbox{1}{STAMP 2} \\
+			\wordbox{1}{STAMP 2} \\
+			\wordbox{1}{STAMP 3} \\
+			\wordbox{1}{STAMP 3} \\ 
+			\wordbox{1}{STAMP 4} \\
+			\wordbox{1}{STAMP 4} \\
+			\wordbox{1}{STAMP 5} \\
+			\wordbox{1}{STAMP 5} \\
+			\wordbox{1}{STAMP 6} \\
+			\wordbox{1}{STAMP 6} \\
+			\wordbox{1}{Status Register 1} \\
+			\wordbox{1}{Status Register 2} \\
+		\end{bytefield} \\
+	\end{center}
+\caption{Measurment data format}
+\label{fig:measurmentResults}
+\end{figure}
+The page alignment is shown below, figure \ref{fig:pagealignment}. 
+\begin{figure}[H]
+	\begin{center}
+	\begin{bytefield} {32}
+	\memsection{0}{3B}{3}{Measurment \# 1} \\
+	\memsection{3C}{77}{3}{Measurment \# 2} \\
+	\memsection{78}{B3}{3}{Measurment \# 3} \\
+	\memsection{B4}{EF}{3}{Measurment \# 4} \\
+	\memsection{F0}{12B}{3}{Measurment \# 5} \\
+	\memsection{12C}{167}{3}{Measurment \# 6} \\
+	\memsection{168}{1A3}{3}{Measurment \# 7} \\
+	\memsection{1A4}{1DF}{3}{Measurment \# 8} \\
+	\memsection{1EO}{200}{3}{- Empty -} \\
+\end{bytefield}
+\end{center}
+\caption{Page alignment}
+\label{fig:pagealignment}
+\end{figure}
+\subsubsection{Endurance}
+There is a maximum sample rate of $\frac{2000 ~Sp}{s}$. Therefore the System writes one page every 4 ms, in total 250 pages per second. Due to the system configuration one memory device will be served with 125 pages every second. The maximum flight time is set to 600s, maximum 150.0000 pages. 
+\begin{equation}
+	\begin{split}
+		A ~:= \text{Number of measurments per Page} \\ 
+		T_{sample} = \frac{1}{2000 \frac{Sp}{s}} = 500 \mu s \\ 
+		T_{page} = A \cdot T_{sample} = 8 \cdot 500\mu s = 4 ms \\  
+		\frac{\text{Pages}}{s}_{total} =  \frac{1~s}{4 ms} = 250 \\
+		\text{Page}_{max} = 600~s \cdot 250 \frac{\text{Pages}}{s} = 150k
+	\end{split}
+\end{equation}
+\textbf{Maximum ratings} \\ 
+Per device: 75000 pages of 125000 pages are used (60.04 \%). Meta data included. \\  \\ 
+\textbf{Critical Values} \\ 
+The critical ratings of the system are a extention of the flight time to 995s ($\approx$ 16.5 min). If the system reaches this condition, the memory is not able to store any more data.  
