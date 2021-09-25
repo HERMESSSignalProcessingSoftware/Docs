@@ -1,62 +1,274 @@
 %Register Tabelle
-
-\section{Memory APB3 Registers}
-\subsection{Register Mapping}
+\subsection{Memory APB3 Registers}
+\subsubsection{Register Mapping}
 \label{sec:apbRegDec}
 \renewcommand{\arraystretch}{1.5}
 \begin{longtable} [htb] { |p{0.3\linewidth}|p{0.14\linewidth}|p{0.14\linewidth}|p{0.3\linewidth}| } \hline
 	\label{tab:table3}
 	\textbf{Name} & \textbf{Addr}& \textbf{R/W}&\textbf{Describtion}\\
 	\hline
-	Stamp1ShadowReg1&0x04&R&\\
+	Stamp1ShadowReg1&0x04&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp1ShadowReg2&0x08&R&\\
+	Stamp1ShadowReg2&0x08&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp2ShadowReg1&0x0C&R&\\
+	Stamp2ShadowReg1&0x0C&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp2ShadowReg2&0x10&R&\\
+	Stamp2ShadowReg2&0x10&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp3ShadowReg1&0x14&R&\\
+	Stamp3ShadowReg1&0x14&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp3ShadowReg2&0x18&R&\\
+	Stamp3ShadowReg2&0x18&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp4ShadowReg1&0x1C&R&\\
+	Stamp4ShadowReg1&0x1C&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp4ShadowReg2&0x20&R&\\
+	Stamp4ShadowReg2&0x20&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp5ShadowReg1&0x24&R&\\
+	Stamp5ShadowReg1&0x24&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp5ShadowReg2&0x28&R&\\
+	Stamp5ShadowReg2&0x28&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	Stamp6ShadowReg1&0x2C&R&\\
+	Stamp6ShadowReg1&0x2C&R + W& Reset on write. \par Reset to 0x0. \\
 	\hline
-	Stamp6ShadowReg2&0x30&R&\\
+	Stamp6ShadowReg2&0x30&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	StartAddrReg&0x34&R + W&\\
+	SyncStatusReg&0x34&R + W& Look at section \ref{sec:syncStatusReg}.\\
 	\hline
-	CurrentAddrReg&0x38&R&\\
+	ConfigReg&0x38&R + W& Look at section \ref{sec:configReg}. \\
 	\hline
-	SPITransmitReg&0x3C&R + W& Look at section \ref{sec:SPITxReg} \\
+	ResetTimerValueReg&0x3C&R + W& 32 bit value. \par Default at 0xFFFFFFFF. \par Counts clock rising edges. \\
 	\hline
-	SPIRecReg&0x40&R&\\
+	WaitingTimerValueReg&0x40&R + W&  32 bit value. \par Default at 0xFFFFFFFF. \par Counts clock rising edges. \\
 	\hline
-	ConfigStatusReg&0x44&R + W& Look at section \ref{sec:ConStReg}\\
+	ResyncTimerValueReg&0x44&R + W&  32 bit value. \par Default at 0xFFFFFFFF. \par Counts clock rising edges.\\
 	\hline
-	CommandReg&0x48&R + W& Look at section \ref{sec:RMShadowReg}\\
+	TimestampReg&0x48&R + W& Reset on write. \par Reset to 0x0.\\
 	\hline
-	ReadMemoryShadowReg&0x4C&R&\\
+	SyncStatusReg2&0x4C&R + W& Reset on write. \par Reset to 0x0. \par Look at section \ref{sec:SyncStatusReg2}.\\
 	\hline
-\caption{Register Map}
+\caption[Register map]{Register Map}
+\label{tbl:registeraddress}
 \end{longtable}
 \renewcommand{\arraystretch}{1.0}
-\subsection{SPI Transmit Register} 
-\label{sec:SPITxReg}
-TODO
-\subsection{Config Status Register} 
-\label{sec:ConStReg}
-TODO
-\subsection{Read Memory Shadow Register} 
-\label{sec:RMShadowReg}
-TODO
-
-	
+\subsection{SyncStatus Register} 
+\label{sec:syncStatusReg}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{16 - \bit}
+			\rwbits{0}{4}{RE}
+			\rwbits{4}{1}{R6}
+			\rwbits{5}{1}{R5}
+			\rwbits{6}{1}{R4}
+			\rwbits{7}{1}{R3}
+			\rwbits{8}{1}{R2}
+			\rwbits{9}{1}{R1}
+			\rwbits{10}{1}{M6}
+			\rwbits{11}{1}{M5}
+			\rwbits{12}{1}{M4}
+			\rwbits{13}{1}{M3}
+			\rwbits{14}{1}{M2}
+			\rwbits{15}{1}{M1}
+			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register bits 0 to 15]{SyncStatus Register bits 0 to 15}
+	\label{fig:SSR11}
+\end{figure}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{32 - \bit}
+			\rwbits{0}{1}{PS}
+			\rwbits{1}{1}{PR}
+			\robits{2}{1}{}
+			\rwbits{3}{1}{AE}
+			\robits{4}{2}{}
+			\rwbits{6}{1}{O6}
+			\rwbits{7}{1}{O5}
+			\rwbits{8}{1}{O4}
+			\rwbits{9}{1}{O3}
+			\rwbits{10}{1}{O2}
+			\rwbits{11}{1}{O1}
+			\rwbits{12}{4}{RE}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register bits 31 to 16]{SyncStatus Register bits 31 to 15}
+	\label{fig:SSR12}
+\end{figure}
+\noindent
+M1 - M6: Bitmask for every stamp which has not provied a newAvails signal. \\
+R1 - R6: Bitmask for every stamp which is requesting a Resync. \\ 
+RE: 8 bit counter: the number of ResyncEvents. \\ 
+O1 - O6: StatusReg2 overflow marker. Means that the difference to the timestamp register is bigger than the size of 5 bits. \\ 
+AE: APB Error Address not known. \\ 
+PR: Pending Reading Interrupt. \\
+PS: Pending Synchronizer Interrupt. \\
+\subsection{SyncStatus Register 2} 
+\label{sec:SyncStatusReg2}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{16 - \bit}
+			\rwbits{0}{1}{S4}
+			\rwbits{1}{5}{S3}
+			\rwbits{6}{5}{S2}
+			\rwbits{11}{5}{S1}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register 2 bits 15 to 0]{SyncStatus Register 2 bits 15 to 0}
+	\label{fig:SSR21}
+\end{figure}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{32 - \bit}
+			\robits{0}{2}{}
+			\rwbits{2}{5}{S6}
+			\rwbits{7}{5}{S5}	
+			\rwbits{12}{4}{S4}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[SyncStatus Register bits 31 to 16]{SyncStatus Register bits 31 to 15}
+	\label{fig:SSR22}
+\end{figure}
+S1 - S6: 5 bit counter; relative distance to the Timestamp value. \\
+\subsection{Config  Register} 
+\label{sec:configReg}
+\begin{figure}[htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{16 - \bit}
+			\robits{0}{9}{}
+			\rwbits{9}{3}{RS value}
+			\robits{12}{1}{}
+			\rwbits{13}{3}{NA value}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[Config Register bits 15 to 0]{Config Register bits 15 to 0}
+	\label{fig:CR1}
+\end{figure}
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{tikzpicture}
+			\bitrect{16}{32 - \bit}
+			\rwbits{0}{1}{EI}
+			\rwbits{1}{1}{CS}
+			\rwbits{2}{1}{CR}	
+			\robits{3}{13}{}			
+		\end{tikzpicture}
+	\end{center}
+	\caption[Config Register bits 16 to 31]{Config Register bits 31 to 16}
+	\label{fig:CR2}
+\end{figure}
+\noindent
+NA value: Number of minimal neccessary \textit{newAvail} signals. Default 4. \\
+RS value: Number of minimal neccessary \textit{Request Resync} signals. Default 4. \\ 
+CR: Clear Read Interrupt. \\
+CS: Clear Synchronizer Interrupt. \\ 
+EI: Enable Interrupts. \\
+\subsection{Calculating Timer Values}
+\label{sec:CTV}
+This only affects the registers \textit{ResetTimerValue}, \textit{WaitingTimerValue} and \textit{ResyncTimerValue}. \\ 
+The timer are designed as a countdown timer, if they are reaching the value zero, their action will be executed. The resolution of the timers is 20 ns, so the values will be calculated as shown in equation \ref{eq:timer}.
+\begin{equation}
+	\begin{split}
+			\text{Value} = \frac{\text{Excpected Time} \left[s\right]}{T_{cpu}} = \frac{\text{Excpected Time }\left[s\right] }{20 ~ns} 
+	\end{split}
+\label{eq:timer}
+\end{equation}	
+Due to this equation the interval for Value is: $$\left\{\text{Value} \in \mathbb{N_0} \mid 0 \leq \text{Value} \leq 85 \right\}$$
+\subsection{Format}
+\label{sec:format}
+\begin{center}
+\begin{bytefield}[rightcurlyspace = 10pt]{32}
+		\memsection{0}{1FF}{5}{Meta Data} \\
+		\memsection{200}{1E848}{10}{Measurment Data} \\
+\end{bytefield} \\
+\textbf{Memory Map 1} Memory format of $\overline{cs_1}$ connected device. 
+\end{center}
+\begin{center}
+	\begin{bytefield}[rightcurlyspace = 10pt]{32}
+		\memsection{0}{1FF}{5}{- empty -} \\
+		\memsection{200}{1E848}{10}{Measurment Data} \\
+	\end{bytefield} \\
+	\textbf{Memory Map 2} Memory format of $\overline{cs_2}$ connected device. 
+\end{center}
+\subsubsection{Meta data}
+The memory region for the meta data is set to 512 pages. It is used to store the last knwon address pointer for the measurment values. This addresses are called \textit{page region pointer (ptr)}. 
+\begin{center}
+	\begin{bytefield}{32}
+		\wordbox[lrt]{1}{Page address 0x0} \\
+		\skippedwords \\
+		\wordbox[lrb]{1}{Page address 0x1FF} \\
+	\end{bytefield}
+\end{center}
+This pointers are continuous written, starting at page 0x0 at positon 0x0. Each 32 bit value represents one 32 bit page address. The empty space of each page is used for the next pointer. Therefore this memory region will be smaller with the program continuing it actions. 
+\begin{center}
+	\begin{bytefield}[rightcurlyspace = 10pt]{32}
+		\begin{rightwordgroup}{0x0}
+			\memsection{0}{3}{2}{Page Region Ptr} \\
+			\memsection{4}{7}{2}{Page Region Ptr} \\
+			\memsection{8}{B}{2}{Page Region Ptr} \\
+			\memsection{C}{ff}{4}{Empty Space}
+		\end{rightwordgroup} \\ 
+	\end{bytefield}
+\end{center}
+\subsubsection{Measurment data}
+This memory section is used for the measurment values. The default start address is 0x200. One Measurment result is stored in 60 byte of data, shown below. One page is 512 byte long, the measurment values will be stored in 480 bytes of this. The page usage is at 93.75 \%.   \\
+\begin{figure}[H]
+	\begin{center}
+		\begin{bytefield}[endianness=big] {32}
+			\bitheader{0, 31} \\
+			\wordbox{1}{Timestamp} \\ 
+			\wordbox{1}{STAMP 1} \\
+			\wordbox{1}{STAMP 1} \\
+			\wordbox{1}{STAMP 2} \\
+			\wordbox{1}{STAMP 2} \\
+			\wordbox{1}{STAMP 3} \\
+			\wordbox{1}{STAMP 3} \\ 
+			\wordbox{1}{STAMP 4} \\
+			\wordbox{1}{STAMP 4} \\
+			\wordbox{1}{STAMP 5} \\
+			\wordbox{1}{STAMP 5} \\
+			\wordbox{1}{STAMP 6} \\
+			\wordbox{1}{STAMP 6} \\
+			\wordbox{1}{Status Register 1} \\
+			\wordbox{1}{Status Register 2} \\
+		\end{bytefield} \\
+	\end{center}
+\caption{Measurment data format}
+\label{fig:measurmentResults}
+\end{figure}
+The page alignment is shown below, figure \ref{fig:pagealignment}. 
+\begin{figure}[H]
+	\begin{center}
+	\begin{bytefield} {32}
+	\memsection{0}{3B}{3}{Measurment \# 1} \\
+	\memsection{3C}{77}{3}{Measurment \# 2} \\
+	\memsection{78}{B3}{3}{Measurment \# 3} \\
+	\memsection{B4}{EF}{3}{Measurment \# 4} \\
+	\memsection{F0}{12B}{3}{Measurment \# 5} \\
+	\memsection{12C}{167}{3}{Measurment \# 6} \\
+	\memsection{168}{1A3}{3}{Measurment \# 7} \\
+	\memsection{1A4}{1DF}{3}{Measurment \# 8} \\
+	\memsection{1EO}{200}{3}{- Empty -} \\
+\end{bytefield}
+\end{center}
+\caption{Page alignment}
+\label{fig:pagealignment}
+\end{figure}
+\subsubsection{Endurance}
+There is a maximum sample rate of $\frac{2000 ~Sp}{s}$. Therefore the System writes one page every 4 ms, in total 250 pages per second. Due to the system configuration one memory device will be served with 125 pages every second. The maximum flight time is set to 600s, maximum 150.0000 pages. 
+\begin{equation}
+	\begin{split}
+		A ~:= \text{Number of measurments per Page} \\ 
+		T_{sample} = \frac{1}{2000 \frac{Sp}{s}} = 500 \mu s \\ 
+		T_{page} = A \cdot T_{sample} = 8 \cdot 500\mu s = 4 ms \\  
+		\frac{\text{Pages}}{s}_{total} =  \frac{1~s}{4 ms} = 250 \\
+		\text{Page}_{max} = 600~s \cdot 250 \frac{\text{Pages}}{s} = 150k
+	\end{split}
+\end{equation}
+\textbf{Maximum ratings} \\ 
+Per device: 75000 pages of 125000 pages are used (60.04 \%). Meta data included. \\  \\ 
+\textbf{Critical Values} \\ 
+The critical ratings of the system are a extention of the flight time to 995s ($\approx$ 16.5 min). If the system reaches this condition, the memory is not able to store any more data.  

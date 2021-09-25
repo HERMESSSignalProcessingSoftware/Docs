@@ -19,7 +19,7 @@
 \usepackage[onehalfspacing]{setspace}
 \usepackage[sfdefault]{noto} % Standardschrift aendern
 \usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel} % Woerterbuch
+\usepackage[english]{babel} % Woerterbuch
 \definecolor{tableHeader}{RGB}{255,238,205}
 \definecolor{white}{RGB}{255,255,255}
 \usepackage[left=2.50cm, right=2.50cm, top=2.50cm, bottom=3.0cm]{geometry} % Seitengeometrie
@@ -39,8 +39,50 @@
 %\addbibresource{documentation.bib} 
 \usepackage{pdflscape}
 \newcommand{\quotes}[1]{\glqq#1\grqq}
-\usepackage{longtable}
+\usepackage{longtable,lscape}
 \usepackage{multirow}
 %\usetikzlibrary{shapes,arrows}
 %\usepackage{amsmath,bm,times}
 %\usepackage{verbatim}
+\newcommand{\bitrect}[2]{
+	\begin{pgfonlayer}{foreground}
+		\draw [thick] (0,0) rectangle (#1,1);
+		\pgfmathsetmacro\result{#1-1}
+		\foreach \x in {1,...,\result}
+		\draw [thick] (\x,1) -- (\x, 0.8);
+	\end{pgfonlayer}
+	%  \node [below left, align=right] at (0,0) {Type \\ Reset};
+	\bitlabels{#1}{#2}
+}
+\newcommand{\rwbits}[3]{
+	\draw [thick] (#1,0) rectangle ++(#2,1) node[pos=0.5]{#3};
+	\pgfmathsetmacro\start{#1+0.5}
+	\pgfmathsetmacro\finish{#1+#2-0.5}
+	%  \foreach \x in {\start,...,\finish}
+	%    \node [below, align=center] at (\x, 0) {R/W \\ 0};
+}
+\newcommand{\robits}[3]{
+	\begin{pgfonlayer}{background}
+		\draw [thick, fill=lightgray] (#1,0) rectangle ++(#2,1) node[pos=0.5]{#3};
+	\end{pgfonlayer}
+	\pgfmathsetmacro\start{#1+0.5}
+	\pgfmathsetmacro\finish{#1+#2-0.5}
+	%  \foreach \x in {\start,...,\finish}
+	%    \node [below, align=center] at (\x, 0) {RO \\ 0};
+}
+\newcommand{\bitlabels}[2]{
+	\foreach \bit in {1,...,#1}{
+		\pgfmathsetmacro\result{#2}
+		\node [above] at (\bit-0.5, 1) {\pgfmathprintnumber{\result}};
+	}
+}
+\usepackage{bytefield}
+\newcommand{\memsection}[4]{
+	\bytefieldsetup{bitheight=#3\baselineskip}	% define the height of the memsection
+	\bitbox[]{8}{
+		\texttt{0x\uppercase{#1}}	 % print end address
+		\\ \vspace{#3\baselineskip} \vspace{-2\baselineskip} \vspace{-#3pt} % do some spacing
+		\texttt{0x\uppercase{#2}} % print start address
+	}
+	\bitbox{16}{#4} % print box with caption
+}

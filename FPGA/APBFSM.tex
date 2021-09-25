@@ -1,0 +1,16 @@
+\begin{figure}[htb] 
+	\begin{center}
+		\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+			\node[state] (apbwaiting) {ABPWaiting};
+			\node[state, below left of = apbwaiting, node distance = 5cm] (apbwriting) {APBWriting};
+			\node[state, below right  of = apbwaiting, node distance = 5cm] (apbreading) {APBReading};
+			\path[->] (apbwaiting) edge[bend right] node[sloped, anchor=center, above, text width=3.6cm,align = left] {PENABLE = high \\ \&\& PWRITE = high \\ \&\& PSEL = high} (apbwriting);
+			\path[->] (apbwaiting) edge[bend left] node[sloped, anchor=center, above, text width=3.2cm,align = left] {PWRITE = low \\ \&\& PSEL = high} (apbreading);
+			%
+			\path[->] (apbwriting) edge[bend right] (apbwaiting);
+			\path[->] (apbreading) edge[bend left] (apbwaiting);
+		\end{tikzpicture}
+	\end{center}
+	\caption[AMBA finit statemachine]{AMBA finit statemachine}
+	\label{fig:memamba}
+\end{figure}

@@ -1,0 +1,28 @@
+\begin{figure}[htb] 
+	\begin{center}
+		\begin{tikzpicture}[node distance = 4cm, black, ultra thick]
+			\node[state] (start) at (0,0) {Start};
+			\node[state, above right of = start, node distance = 8cm] (ResyncEvent) {Resync Event};
+			\node[state, below of = ResyncEvent, node distance = 8cm] (S11) {S11};
+			\node[state, below left of = S11] (S1) {S1};
+			\node[red!50, state, above left of = start] (Error1) {Error 1};
+			\node[state, below of = start, node distance = 8cm] (End1) {End 1};
+			% Draw lines 
+			\coordinate (tempStart) at ($(start) - (2,-1)$);
+			\path[->, draw, black] (tempStart) -- node[sloped, anchor=center, above, align=left]{$\overline{reset}$} (start);
+			\path[->] (start) edge[loop left]  node[sloped, anchor=center, above,text width=3.5cm, align=left] {all other}(start);
+			\path[->] (start) edge[bend left] node[sloped, anchor=center, above,text width=3.5cm, align=left]{\small{\# Request Resync = $X_1$\\ AND \\ ResyncTimer = 0}} (ResyncEvent);
+			\path[->] (ResyncEvent) edge[bend left] (start);
+			\path[->] (start) edge[bend left] node[sloped, anchor=center, above,text width=3.2cm, align=left] {\small{\# new Avail $>$ 0}} (S1);
+			\path[->] (S1) edge[loop left] node[sloped, anchor=center, above, align = left] {\small{all other}} (S1);
+			\path[->] (S1) edge[bend left] node[sloped, anchor=center, below, text width=3.2cm,align = left] {\small{\# New Avail = 6 \\ OR \\ $~$\\ \# New Avail $\ge~X_2$ \\ AND \\ WaitingTimer = 0 }} (End1);
+			\path[->] (S1) edge[bend right] node[sloped, anchor=center, below, text width=3.2cm,align = left] {\small{WaitingTimer = 0 \\ AND \\ \# New Avail < $X_2$}}(S11);
+			\path[->] (S11) edge[bend right] node[sloped, anchor=center, below, text width=3.2cm,align = left] {ResyncTimer = 0} (ResyncEvent);
+			\path[->] (S11) edge[bend right] node[sloped, anchor=left, above, text width=3.2cm,align = left] {\small{ResyncTimer $\neq$ 0}}(start);
+			\path[->] (start) edge[bend right] node[sloped, anchor=center, above, text width=3.2cm,align = left]{\small{SyncTimer = 0}} (Error1);
+			\path[->] (End1) edge[bend left] (start);
+		\end{tikzpicture}
+	\end{center}
+	\label{fig:MemCu}
+	\caption[Memory controll unit statemachine]{Memory controll unit finit statemachine}
+\end{figure}
